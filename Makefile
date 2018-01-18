@@ -15,7 +15,7 @@ git:
 commit:
 	git commit -a
 push:
-	git push
+	git push origin master
 pull:
 	git pull origin master
 clean:
