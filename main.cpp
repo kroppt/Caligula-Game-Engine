@@ -1,6 +1,7 @@
 #include <iostream>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
+#include "glad.h"
 #include "audio/AudioInterface.h"
 
 int main(int argc, char** argv){
@@ -37,6 +38,7 @@ int main(int argc, char** argv){
     
     SDL_GLContext context = SDL_GL_CreateContext(win);
     SDL_GL_SetSwapInterval(1);
+    gladLoadGL();
 
     // Wait 3 seconds
     SDL_Delay(3000);
