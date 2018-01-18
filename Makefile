@@ -1,4 +1,3 @@
-#Greg is ergi
 CXXFLAGS=-I/usr/include/SDL2 -I/usr/include/libdrm -O4 -std=gnu++17 -Wall -Wextra -D_REENTRANT -Iaudio
 LDLIBS=-ldrm -lSDL2 -lGL -lm 
 LDFLAGS=-O4 -flto
@@ -13,7 +12,8 @@ caligula: $(OBJECTS)
 git:
 	git submodule init
 	git submodule update
-
+commit:
+	git commit -a
 push:
 	git push
 clean:
