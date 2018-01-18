@@ -1,4 +1,4 @@
-CXXFLAGS=-I/usr/include/SDL2 -I/usr/include/libdrm -O4 -std=gnu++17 -Wall -Wextra -D_REENTRANT -Iaudio
+CXXFLAGS=-I/usr/include/SDL2 -I/usr/include/libdrm -Iinclude -O4 -std=gnu++17 -Wall -Wextra -D_REENTRANT -Iaudio
 LDLIBS=-ldrm -lSDL2 -lGL -lm 
 LDFLAGS=-O4 -flto
 

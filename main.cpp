@@ -1,7 +1,7 @@
 #include <iostream>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
-#include "glad.h"
+#include "glad/glad.h"
 #include "audio/AudioInterface.h"
 
 int main(int argc, char** argv){
