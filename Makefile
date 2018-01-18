@@ -3,7 +3,7 @@ CXXFLAGS=-I/usr/include/SDL2 -I/usr/include/libdrm -O4 -std=gnu++17 -Wall -Wextr
 LDLIBS=-ldrm -lSDL2 -lGL -lm 
 LDFLAGS=-O4 -flto
 
-OBJECTS=audio/AudioInterface.o main.o
+OBJECTS=main.o audio/AudioInterface.o
 .PHONY: git
 
 caligula: $(OBJECTS)
