@@ -1,8 +1,10 @@
-CXXFLAGS=-I/usr/include/SDL2 -I/usr/include/libdrm -Iinclude -O4 -std=gnu++17 -Wall -Wextra -D_REENTRANT -Iaudio
-LDLIBS=-ldrm -lSDL2 -lGL -lm 
+FLAGS=-I/usr/include/SDL2 -I/usr/include/libdrm -Iinclude -O4  -Wall -Wextra -D_REENTRANT -Iaudio
+CXXFLAGS=$(FLAGS) -std=gnu++17
+CFLAGS=$(FLAGS) -std=gnu11
+LDLIBS=-ldrm -lSDL2 -lGL -lm -ldl
 LDFLAGS=-O4 -flto
 
-OBJECTS=main.o audio/AudioInterface.o
+OBJECTS=main.o audio/AudioInterface.o src/glad.o
 .PHONY: git clean push pull commit
 all: caligula
 caligula: $(OBJECTS)
