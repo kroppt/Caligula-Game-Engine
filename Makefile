@@ -3,7 +3,7 @@ LDLIBS=-ldrm -lSDL2 -lGL -lm
 LDFLAGS=-O4 -flto
 
 OBJECTS=main.o audio/AudioInterface.o
-.PHONY: git clean push
+.PHONY: git clean push pull commit
 all: caligula
 caligula: $(OBJECTS)
 	$(CXX) -o caligula $(OBJECTS) $(LDFLAGS) $(LDLIBS)
@@ -16,5 +16,7 @@ commit:
 	git commit -a
 push:
 	git push
+pull:
+	git pull origin master
 clean:
 	rm $(OBJECTS)
