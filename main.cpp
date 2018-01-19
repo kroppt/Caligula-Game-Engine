@@ -39,7 +39,11 @@ int main(int argc, char** argv){
     
     SDL_GLContext context = SDL_GL_CreateContext(win);
     SDL_GL_SetSwapInterval(1);
-    gladLoadGL();
+    if (!gladLoadGL()) {
+        std::cout << "gladLoadGL error" << std::endl;
+        SDL_Quit();
+        return 1;
+    }
 
     // Wait 3 seconds
     SDL_Delay(3000);
