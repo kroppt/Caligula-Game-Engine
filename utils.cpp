@@ -1,12 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "utils.h"
+#include <stdexcept>
+#include <sstream>
 
 char* read(const char *filename){
     FILE *fp = fopen(filename, "r");
     
     if(fp == NULL){
-        printf("Error in opening \"%s\"\n", filename);
+        std::ostringstream oss;
+        oss << "Error in opening \"" << filename << "\"\n";
+        throw std::invalid_argument(oss.str());
     }
 
     // seek to end of file to determine length

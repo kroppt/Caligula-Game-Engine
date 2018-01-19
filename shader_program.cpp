@@ -3,8 +3,7 @@
 #include <stdlib.h>
 #include <stdexcept>
 #include "utils.h"
-
-using namespace std;
+#include <sstream>
 
 // taken from http://lazyfoo.net/tutorials/SDL/51_SDL_and_modern_opengl/index.php
 static void printProgramLog(GLuint program){
@@ -25,7 +24,7 @@ static void printProgramLog(GLuint program){
         }
         
         //Deallocate string
-		free(infoLog);
+        free(infoLog);
     }else{
         printf("Name %d is not a program\n", program);
     }
@@ -51,69 +50,57 @@ static void printShaderLog(GLuint shader){
         }
 
         //Deallocate string
-		free(infoLog);
+        free(infoLog);
     }else{
         printf("Name %d is not a shader\n", shader);
     }
 }
 
-ShaderProgram::ShaderProgram(const char *vertexShaderFilename, const char *fragmentShaderFilename){
-	// initialize OpenGL program and shader IDs
-    programID_ = glCreateProgram();
-	vertexShader_ = glCreateShader(GL_VERTEX_SHADER);
-	fragmentShader_ = glCreateShader(GL_FRAGMENT_SHADER);
+static GLuint createShader(GLenum shaderType, const char *filename){
+    GLuint shader = glCreateShader(shaderType);
+    char *source = read(filename);
+    glShaderSource(shader, 1, &source, NULL);
+    glCompileShader(shader);
+    free(source);
 
-	// extract shader source code
-	char *vertexShaderSource = read(vertexShaderFilename);
-	char *fragmentShaderSource = read(fragmentShaderFilename);
-
-	// set and compile shader source code
-	glShaderSource(vertexShader_, 1, &vertexShaderSource, NULL);
-	glCompileShader(vertexShader_);
-	glShaderSource(fragmentShader_, 1, &fragmentShaderSource, NULL);
-	glCompileShader(fragmentShader_);
-
-	free(vertexShaderSource);
-	free(fragmentShaderSource);
-
-	// check for successful shader compilation
-	GLint vShaderCompiled = GL_FALSE;
-    glGetShaderiv(vertexShader_, GL_COMPILE_STATUS, &vShaderCompiled);
-    if(vShaderCompiled != GL_TRUE) {
-        printShaderLog(vertexShader_);
-		throw invalid_argument("Unable to compile vertex shader");
+    // check for successful shader compilation
+    GLint compiled = GL_FALSE;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled);
+    if(compiled != GL_TRUE) {
+        printShaderLog(shader);
+        throw std::invalid_argument("Unable to compile a shader");
     }
+}
 
-	GLint fShaderCompiled = GL_FALSE;
-	glGetShaderiv(fragmentShader_, GL_COMPILE_STATUS, &fShaderCompiled);
-	if(fShaderCompiled != GL_TRUE){
-		printShaderLog(fragmentShader_);
-		throw invalid_argument("Unable to compile fragment shader");
-	}
+ShaderProgram::ShaderProgram(const char *vertexShaderFilename, const char *fragmentShaderFilename){
+    // initialize OpenGL program and shader IDs
+    programID_ = glCreateProgram();
+    vertexShader_ = createShader(GL_VERTEX_SHADER, vertexShaderFilename);
+    fragmentShader_ = createShader(GL_FRAGMENT_SHADER, fragmentShaderFilename);
 
-	// attach shaders to program
-	glAttachShader(programID_, vertexShader_);
-	glAttachShader(programID_, fragmentShader_);
-	glLinkProgram(programID_);
+    // attach shaders to program
+    glAttachShader(programID_, vertexShader_);
+    glAttachShader(programID_, fragmentShader_);
+    glLinkProgram(programID_);
 
-	// check for program errors
-	GLint programSuccess = GL_TRUE;
-	glGetProgramiv(programID_, GL_LINK_STATUS, &programSuccess);
-	if(programSuccess != GL_TRUE){
-		printProgramLog(programID_);
-		throw invalid_argument("Error linking program");
-	}
+    // check for program errors
+    GLint programSuccess = GL_TRUE;
+    glGetProgramiv(programID_, GL_LINK_STATUS, &programSuccess);
+    if(programSuccess != GL_TRUE){
+        printProgramLog(programID_);
+        throw std::invalid_argument("Error linking program");
+    }
 
 }
 
 void ShaderProgram::bind(){
-	glUseProgram(programID_);
+    glUseProgram(programID_);
 }
 
 void ShaderProgram::unbind(){
-	glUseProgram(0);
+    glUseProgram(0);
 }
 
 void ShaderProgram::relink(){
-	glLinkProgram(programID_);
+    glLinkProgram(programID_);
 }
