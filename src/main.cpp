@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <SDL2/SDL.h>
-#include <glad/glad.h>
+#include "glad/glad.h"
 #include <SDL2/SDL_opengl.h>
 #include "audio/AudioInterface.h"
 #include "shader_program.h"
@@ -65,9 +65,22 @@ int main(int argc, char** argv){
     shaderList.push_back(fragmentShader);
 
     ShaderProgram shaderProgram(shaderList);
-
-
-
+    SDL_Event event;
+    bool running = true;
+    loadSound("test", "audio/test.mpcm");
+    while(running){
+        while(SDL_PollEvent(&event)){
+            switch(event.type){
+                case SDL_QUIT:
+                    running = false;
+                    break;
+                case SDL_KEYDOWN:
+                    playSnd("test", 0,0,0,0,1.0);
+                    break;
+            }
+        }
+        SDL_Delay(1);
+    }
     // Wait 3 seconds
     SDL_Delay(3000);
     SDL_DestroyWindow(win);
