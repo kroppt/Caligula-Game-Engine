@@ -38,7 +38,9 @@ GLuint createShader(GLenum shaderType, const char *filename){
     glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled);
     if(compiled != GL_TRUE) {
         printShaderLog(shader);
-        throw std::invalid_argument("Unable to compile a shader");
+        std::ostringstream oss;
+        oss << "Error in compiling \"" << filename << "\"\n";
+        throw std::invalid_argument(oss.str());
     }
 }
 
