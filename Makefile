@@ -10,7 +10,6 @@ all: caligula
 caligula: $(OBJECTS)
 	$(CXX) -o caligula $(OBJECTS) $(LDFLAGS) $(LDLIBS)
 
-
 git:
 	git submodule init
 	git submodule update

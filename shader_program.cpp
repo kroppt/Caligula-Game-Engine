@@ -64,14 +64,17 @@ ShaderProgram::ShaderProgram(const char *vertexShaderFilename, const char *fragm
 	fragmentShader_ = glCreateShader(GL_FRAGMENT_SHADER);
 
 	// extract shader source code
-	const char *vertexShaderSource = read(vertexShaderFilename);
-	const char *fragmentShaderSource = read(fragmentShaderFilename);
+	char *vertexShaderSource = read(vertexShaderFilename);
+	char *fragmentShaderSource = read(fragmentShaderFilename);
 
 	// set and compile shader source code
 	glShaderSource(vertexShader_, 1, &vertexShaderSource, NULL);
 	glCompileShader(vertexShader_);
 	glShaderSource(fragmentShader_, 1, &fragmentShaderSource, NULL);
 	glCompileShader(fragmentShader_);
+
+	free(vertexShaderSource);
+	free(fragmentShaderSource);
 
 	// check for successful shader compilation
 	GLint vShaderCompiled = GL_FALSE;
