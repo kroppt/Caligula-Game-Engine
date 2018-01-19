@@ -102,3 +102,15 @@ ShaderProgram::ShaderProgram(const char *vertexShaderFilename, const char *fragm
 	}
 
 }
+
+void ShaderProgram::bind(){
+	glUseProgram(programID_);
+}
+
+void ShaderProgram::unbind(){
+	glUseProgram(0);
+}
+
+void ShaderProgram::relink(){
+	glLinkProgram(programID_);
+}
