@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <iostream>
 #include <SDL2/SDL.h>
 #include <glad/glad.h>
@@ -6,15 +7,18 @@
 #include "utils.h"
 
 int main(int argc, char** argv){
+    printf("Initializing Caligula version 0\n");
     initAudio();
+    printf("Initialized Audio\n");
     // Initialize video only to avoid failure
     if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER|SDL_INIT_EVENTS) != 0) {
-        std::cout << "SDL_Init error: " << SDL_GetError() << std::endl;
+        printf("SDL_Init error: %s\n", SDL_GetError());
         SDL_Quit();
         return 1;
     }
-    int res_x = 1280;
-    int res_y = 720;
+    printf("Initialized SDL\n");
+    int res_x = 1920;
+    int res_y = 1080;
 
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
@@ -30,14 +34,18 @@ int main(int argc, char** argv){
         SDL_WINDOWPOS_CENTERED,
         res_x,
         res_y,
-        SDL_WINDOW_SHOWN);
+        SDL_WINDOW_SHOWN|SDL_WINDOW_OPENGL);
     if (win == NULL) {
-        std::cout << "SDL_CreateWindow error: " << SDL_GetError() << std::endl;
+        printf("SDL_CreateWindow error %s\n", SDL_GetError());
         SDL_Quit();
         return 1;
     }
-    
+    printf("Created Window\n");
     SDL_GLContext context = SDL_GL_CreateContext(win);
+    if(!context){
+        printf("SDL_GL_CreateContext failed %s\n", SDL_GetError());
+    }
+    SDL_GL_MakeCurrent(win, context);
     SDL_GL_SetSwapInterval(1);
     if (!gladLoadGL()) {
         std::cout << "gladLoadGL error" << std::endl;
@@ -50,6 +58,6 @@ int main(int argc, char** argv){
     SDL_DestroyWindow(win);
     SDL_Quit();
     std::cout << "Reached end of file successfully." << std::endl;
-    
+    quitAudio();
     return 0;
 }
