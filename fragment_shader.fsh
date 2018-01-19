@@ -1,7 +1,8 @@
 #version 450
 
-out vec4 outputColor;
-void main()
-{
-    outputColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+in vec4 inColor
+out vec4 fragColor;
+
+void main(){
+    fragColor = inColor;
 }
