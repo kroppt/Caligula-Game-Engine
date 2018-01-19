@@ -5,6 +5,7 @@
 #include <GL/glx.h>
 #include <SDL2/SDL_opengl.h>
 #include "audio/AudioInterface.h"
+#include "utils.h"
 
 int main(int argc, char** argv){
     printf("Initializing Caligula version 0\n");
@@ -59,5 +60,6 @@ int main(int argc, char** argv){
     SDL_DestroyWindow(win);
     SDL_Quit();
     std::cout << "Reached end of file successfully." << std::endl;
+    
     return 0;
 }
