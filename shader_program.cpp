@@ -4,6 +4,55 @@
 #include <stdexcept>
 #include "utils.h"
 #include <sstream>
+#include <vector>
+
+ShaderProgram::ShaderProgram(std::vector<GLuint> shaderList){
+    // initialize OpenGL program and shader IDs
+    programID_ = glCreateProgram();
+
+    for(std::vector<GLuint>::iterator it = shaderList.begin(); it != shaderList.end(); it++){
+        glAttachShader(programID_, *it);
+    }
+
+    glLinkProgram(programID_);
+
+    // check for program errors
+    GLint programSuccess = GL_TRUE;
+    glGetProgramiv(programID_, GL_LINK_STATUS, &programSuccess);
+    if(programSuccess != GL_TRUE){
+        printProgramLog(programID_);
+        throw std::invalid_argument("Error linking program");
+    }
+
+}
+
+GLuint createShader(GLenum shaderType, const char *filename){
+    GLuint shader = glCreateShader(shaderType);
+    char *source = read(filename);
+    glShaderSource(shader, 1, &source, NULL);
+    glCompileShader(shader);
+    free(source);
+
+    // check for successful shader compilation
+    GLint compiled = GL_FALSE;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled);
+    if(compiled != GL_TRUE) {
+        printShaderLog(shader);
+        throw std::invalid_argument("Unable to compile a shader");
+    }
+}
+
+void ShaderProgram::bind(){
+    glUseProgram(programID_);
+}
+
+void ShaderProgram::unbind(){
+    glUseProgram(0);
+}
+
+void ShaderProgram::relink(){
+    glLinkProgram(programID_);
+}
 
 // taken from http://lazyfoo.net/tutorials/SDL/51_SDL_and_modern_opengl/index.php
 static void printProgramLog(GLuint program){
@@ -54,53 +103,4 @@ static void printShaderLog(GLuint shader){
     }else{
         printf("Name %d is not a shader\n", shader);
     }
-}
-
-static GLuint createShader(GLenum shaderType, const char *filename){
-    GLuint shader = glCreateShader(shaderType);
-    char *source = read(filename);
-    glShaderSource(shader, 1, &source, NULL);
-    glCompileShader(shader);
-    free(source);
-
-    // check for successful shader compilation
-    GLint compiled = GL_FALSE;
-    glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled);
-    if(compiled != GL_TRUE) {
-        printShaderLog(shader);
-        throw std::invalid_argument("Unable to compile a shader");
-    }
-}
-
-ShaderProgram::ShaderProgram(const char *vertexShaderFilename, const char *fragmentShaderFilename){
-    // initialize OpenGL program and shader IDs
-    programID_ = glCreateProgram();
-    vertexShader_ = createShader(GL_VERTEX_SHADER, vertexShaderFilename);
-    fragmentShader_ = createShader(GL_FRAGMENT_SHADER, fragmentShaderFilename);
-
-    // attach shaders to program
-    glAttachShader(programID_, vertexShader_);
-    glAttachShader(programID_, fragmentShader_);
-    glLinkProgram(programID_);
-
-    // check for program errors
-    GLint programSuccess = GL_TRUE;
-    glGetProgramiv(programID_, GL_LINK_STATUS, &programSuccess);
-    if(programSuccess != GL_TRUE){
-        printProgramLog(programID_);
-        throw std::invalid_argument("Error linking program");
-    }
-
-}
-
-void ShaderProgram::bind(){
-    glUseProgram(programID_);
-}
-
-void ShaderProgram::unbind(){
-    glUseProgram(0);
-}
-
-void ShaderProgram::relink(){
-    glLinkProgram(programID_);
 }

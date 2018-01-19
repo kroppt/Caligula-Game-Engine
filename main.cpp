@@ -4,7 +4,9 @@
 #include <glad/glad.h>
 #include <SDL2/SDL_opengl.h>
 #include "audio/AudioInterface.h"
+#include "shader_program.h"
 #include "utils.h"
+#include <vector>
 
 int main(int argc, char** argv){
     printf("Initializing Caligula version 0\n");
@@ -52,6 +54,19 @@ int main(int argc, char** argv){
         SDL_Quit();
         return 1;
     }
+
+    const char *vertexShaderFilename = "vertex_shader.vsh";
+    const char *fragmentShaderFilename = "fragment_shader.fsh";
+    GLuint vertexShader = createShader(GL_VERTEX_SHADER, vertexShaderFilename);
+    GLuint fragmentShader = createShader(GL_FRAGMENT_SHADER, fragmentShaderFilename);
+    
+    std::vector<GLuint> shaderList;
+    shaderList.push_back(vertexShader);
+    shaderList.push_back(fragmentShader);
+
+    ShaderProgram shaderProgram(shaderList);
+
+
 
     // Wait 3 seconds
     SDL_Delay(3000);
