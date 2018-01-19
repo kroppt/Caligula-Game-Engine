@@ -81,8 +81,6 @@ int main(int argc, char** argv){
         }
         SDL_Delay(1);
     }
-    // Wait 3 seconds
-    SDL_Delay(3000);
     SDL_DestroyWindow(win);
     SDL_Quit();
     std::cout << "Reached end of file successfully." << std::endl;
