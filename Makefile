@@ -1,10 +1,10 @@
-FLAGS=-I/usr/include/SDL2 -I/usr/include/libdrm -Iinclude -O4  -Wall -Wextra -D_REENTRANT -Iaudio
+FLAGS=-I/usr/include/SDL2 -I/usr/include/libdrm -Iinclude -O4  -Wall -Wextra -D_REENTRANT -Iaudio -g
 CXXFLAGS=$(FLAGS) -std=gnu++17
 CFLAGS=$(FLAGS) -std=gnu11
-LDLIBS=-ldrm -lSDL2 -lGL -lm -ldl
-LDFLAGS=-O4 -flto
+LDLIBS=-ldrm -lSDL2 -lGL -lm -ldl -lpng
+LDFLAGS=-O4 -flto -g
 
-OBJECTS=main.o utils.o shader_program.o audio/AudioInterface.o src/glad.o
+OBJECTS=main.o utils.o shader_program.o audio/AudioInterface.o src/glad.o src/texture.o
 .PHONY: git clean push pull commit
 all: caligula
 caligula: $(OBJECTS)
