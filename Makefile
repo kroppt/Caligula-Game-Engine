@@ -1,7 +1,7 @@
 FLAGS=-I/usr/include/freetype2 -I/usr/include/SDL2 -I/usr/include/libdrm -Iinclude -O4  -Wall -Wextra -D_REENTRANT -Iaudio -g -I.
 CXXFLAGS=$(FLAGS) -std=gnu++17
 CFLAGS=$(FLAGS) -std=gnu11
-LDLIBS=-lcairo -lharfbuzz -lfreetype -ldrm -lSDL2 -lGL -lm -ldl -lpng
+LDLIBS=-lcairo -lharfbuzz -lfreetype -ldrm -lSDL2 -lSDL2_image -lGL -lm -ldl -lpng
 LDFLAGS=-O4 -flto -g
 
 OBJECTS=src/main.o src/vao.o src/shader_program.o audio/AudioInterface.o src/glad.o src/texture_loader.o src/textrender.o src/linalg.o src/io.o
@@ -20,4 +20,4 @@ push:
 pull:
 	git pull origin master
 clean:
-	rm $(OBJECTS)
+	rm -f $(OBJECTS)

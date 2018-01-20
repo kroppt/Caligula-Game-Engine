@@ -97,8 +97,6 @@ int main(int argc, char** argv){
     const unsigned nVertices = 4, nIndices = 6;
 
     VAO vao(vertices, indices, nVertices, nIndices);
-
-
     SDL_Event event;
     bool running = true;
     loadSound("test", "audio/sh.mpcm");

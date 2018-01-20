@@ -64,6 +64,3 @@ char *load_file(const char *filename){
   fclose(file);
   return buffer;
 }
-
-//
-
