@@ -5,6 +5,7 @@
 #include <SDL2/SDL_opengl.h>
 #include "audio/AudioInterface.h"
 #include "shader_program.h"
+#include "textrender.h"
 #include "utils.h"
 #include <vector>
 #include "vao.h"
@@ -59,6 +60,8 @@ int main(int argc, char** argv){
     }
 
     gl_setup();
+    TextRender text_render = TextRender();
+    text_render.WriteText("This is a... test!");
 
     const char *vertexShaderFilename = "vertex_shader.vsh";
     const char *fragmentShaderFilename = "fragment_shader.fsh";
