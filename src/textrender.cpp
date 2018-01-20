@@ -9,30 +9,44 @@
 using namespace std;
 
 TextRender::TextRender() {
-    TextRender("", FONTSIZE_DEFAULT);
+    this->ChangeFontName("resources/LiberationSerif-Regular.ttf");
+    this->ChangeFontSize(FONTSIZE_DEFAULT);
+    this->ChangeFontRGBA(0., 0., 0., 1.);
+    this->ChangeFontBackgroundRGBA(1., 1., 1., 0.);
 }
 
 TextRender::~TextRender() {
 }
 
-TextRender::TextRender(const string font_name, const double font_size) {
-    this->ChangeFont(font_name, font_size);
+void TextRender::ChangeFontName(const string font_name) {
+    this->font_name = font_name;
 }
 
-void TextRender::ChangeFont(const string font_name, const double font_size) {
-    this->font_name = font_name;
+void TextRender::ChangeFontSize(const double font_size) {
     this->font_size = font_size;
 }
 
+void TextRender::ChangeFontRGBA(const double r, const double g, const double b, const double a) {
+    this->font_rgba.r = r;
+    this->font_rgba.g = g;
+    this->font_rgba.b = b;
+    this->font_rgba.a = a;
+}
+
+void TextRender::ChangeFontBackgroundRGBA(const double r, const double g, const double b, const double a) {
+    this->font_bg_rgba.r = r;
+    this->font_bg_rgba.g = g;
+    this->font_bg_rgba.b = b;
+    this->font_bg_rgba.a = a;
+}
+
 void TextRender::WriteText(const char * text) {
-    this->font_name = "";
-    this->font_size = FONTSIZE_DEFAULT;
     int width = this->font_size;
     int height = this->font_size;
     if (FT_Init_FreeType(&ft_library)) {
         abort();
     }
-    if (FT_New_Face(this->ft_library, "resources/LiberationSerif-Regular.ttf", 0, &this->ft_face)) {
+    if (FT_New_Face(this->ft_library, this->font_name.c_str(), 0, &this->ft_face)) {
         abort();
     }
     if (FT_Set_Char_Size(this->ft_face, font_size*64, font_size*64, 0, 0)) {
@@ -58,9 +72,9 @@ void TextRender::WriteText(const char * text) {
     cairo_t * cr;
     cairo_surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, width, height);
     cr = cairo_create(cairo_surface);
-    cairo_set_source_rgba(cr, 1., 1., 1., 1.);
+    cairo_set_source_rgba(cr, this->font_bg_rgba.r, this->font_bg_rgba.g, this->font_bg_rgba.b, this->font_bg_rgba.a);
     cairo_paint(cr);
-    cairo_set_source_rgba(cr, 0., 0., 0., 1.);
+    cairo_set_source_rgba(cr, this->font_rgba.r, this->font_rgba.g, this->font_rgba.b, this->font_rgba.a);
 
     cairo_font_face_t * c_ft_face = cairo_ft_font_face_create_for_ft_face(this->ft_face, 0);
     cairo_set_font_face(cr, c_ft_face);

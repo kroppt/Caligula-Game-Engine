@@ -61,6 +61,9 @@ int main(int argc, char** argv){
 
     gl_setup();
     TextRender text_render = TextRender();
+    text_render.ChangeFontSize(FONTSIZE_LARGE);
+    text_render.ChangeFontRGBA(1., 0., 1., 1);
+    text_render.ChangeFontBackgroundRGBA(0., 1., 1., 1);
     text_render.WriteText("This is a... test!");
 
     const char *vertexShaderFilename = "vertex_shader.vsh";
