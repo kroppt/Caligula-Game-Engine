@@ -101,7 +101,7 @@ int main(int argc, char** argv){
 
     SDL_Event event;
     bool running = true;
-    loadSound("test", "audio/test.mpcm");
+    loadSound("test", "audio/sh.mpcm");
     while(running){
         while(SDL_PollEvent(&event)){
             switch(event.type){
@@ -112,7 +112,7 @@ int main(int argc, char** argv){
                     if(event.key.keysym.sym == SDLK_ESCAPE){
                         running = false;
                     }
-                    playSnd("test", 0,0,0,0,1.0);
+                    playSnd("test", 1,1,1,1,1);
                     break;
             }
         }
