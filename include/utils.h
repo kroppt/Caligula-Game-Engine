@@ -1,6 +1,6 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-char* read(const char *filename);
+char* readFile(const char *filename);
 
 #endif
