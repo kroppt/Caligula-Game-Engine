@@ -61,6 +61,9 @@ int main(int argc, char** argv){
 
     gl_setup();
     TextRender text_render = TextRender();
+    text_render.ChangeFontSize(FONTSIZE_LARGE);
+    text_render.ChangeFontRGBA(1., 0., 1., 1);
+    text_render.ChangeFontBackgroundRGBA(0., 1., 1., 1);
     text_render.WriteText("This is a... test!");
 
     const char *vertexShaderFilename = "vertex_shader.vsh";
@@ -96,8 +99,7 @@ int main(int argc, char** argv){
     VAO vao(vertices, indices, nVertices, nIndices);
     SDL_Event event;
     bool running = true;
-    printf("Loading SOUND\n");
-    loadSound("test", "sh.mpcm");
+    loadSound("test", "audio/sh.mpcm");
     while(running){
         while(SDL_PollEvent(&event)){
             switch(event.type){
@@ -108,7 +110,7 @@ int main(int argc, char** argv){
                     if(event.key.keysym.sym == SDLK_ESCAPE){
                         running = false;
                     }
-                    playSnd("test", 0,0,0,0,1.0);
+                    playSnd("test", 1,1,1,1,1);
                     break;
             }
         }
