@@ -7,6 +7,9 @@
 #include "shader_program.h"
 #include "utils.h"
 #include <vector>
+#include "vao.h"
+
+void gl_setup(void);
 
 int main(int argc, char** argv){
     printf("Initializing Caligula version 0\n");
@@ -55,6 +58,8 @@ int main(int argc, char** argv){
         return 1;
     }
 
+    gl_setup();
+
     const char *vertexShaderFilename = "vertex_shader.vsh";
     const char *fragmentShaderFilename = "fragment_shader.fsh";
     GLuint vertexShader = createShader(GL_VERTEX_SHADER, vertexShaderFilename);
@@ -65,6 +70,29 @@ int main(int argc, char** argv){
     shaderList.push_back(fragmentShader);
 
     ShaderProgram shaderProgram(shaderList);
+    shaderProgram.bind();
+
+    // green square
+    float vertices[] =
+    {
+        /*x, y, z, r, g, b, a*/
+         5.0f,  5.0f, -0.1f, 0.0f, 1.0f, 0.0f, 1.0f,
+         5.0f, -5.0f, -0.1f, 0.0f, 1.0f, 0.0f, 1.0f,
+        -5.0f, -5.0f, -0.1f, 0.0f, 1.0f, 0.0f, 1.0f,
+        -5.0f,  5.0f, -0.1f, 0.0f, 1.0f, 0.0f, 1.0f
+    };
+
+    unsigned indices[] =
+    {
+        0, 1, 2,
+        2, 3, 0
+    };
+
+    const unsigned nVertices = 4, nIndices = 6;
+
+    VAO vao(vertices, indices, nVertices, nIndices);
+
+
     SDL_Event event;
     bool running = true;
     loadSound("test", "audio/test.mpcm");
@@ -79,11 +107,36 @@ int main(int argc, char** argv){
                     break;
             }
         }
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        vao.render();
+        SDL_GL_SwapWindow(win);
         SDL_Delay(1);
     }
+
+    shaderProgram.unbind();
+
     SDL_DestroyWindow(win);
     SDL_Quit();
     std::cout << "Reached end of file successfully." << std::endl;
     quitAudio();
     return 0;
+}
+
+void gl_setup(){
+    glClearColor(1.0f, 0.5f, 0.0f, 1.0f);
+    // glEnable(GL_MULTISAMPLE);
+    // // face culling
+    // // glEnable(GL_CULL_FACE);
+    // glCullFace(GL_BACK);
+    // glFrontFace(GL_CW);
+    // // depth test
+    // glEnable(GL_DEPTH_TEST);
+    // glDepthMask(true);
+    // glDepthFunc(GL_LESS);
+    // glDepthRange(0.01f, 1.0f);
+    // glEnable(GL_DEPTH_CLAMP);
+    // // alpha blending
+    // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    // glEnable(GL_BLEND);
+
 }

@@ -23,12 +23,11 @@ ShaderProgram::ShaderProgram(std::vector<GLuint> shaderList){
         printProgramLog(programID_);
         throw std::invalid_argument("Error linking program");
     }
-
 }
 
 GLuint createShader(GLenum shaderType, const char *filename){
     GLuint shader = glCreateShader(shaderType);
-    char *source = read(filename);
+    char *source = readFile(filename);
     glShaderSource(shader, 1, &source, NULL);
     glCompileShader(shader);
     free(source);
@@ -40,6 +39,7 @@ GLuint createShader(GLenum shaderType, const char *filename){
         printShaderLog(shader);
         std::ostringstream oss;
         oss << "Error in compiling \"" << filename << "\"\n";
+        oss << source << std::endl;
         throw std::invalid_argument(oss.str());
     }
 }

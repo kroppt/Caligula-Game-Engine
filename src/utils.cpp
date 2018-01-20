@@ -3,8 +3,11 @@
 #include "utils.h"
 #include <stdexcept>
 #include <sstream>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
-char* read(const char *filename){
+char* readFile(const char *filename){
     FILE *fp = fopen(filename, "r");
     
     if(fp == NULL){

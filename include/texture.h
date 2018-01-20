@@ -1,3 +1,6 @@
+#ifndef TEXTURE_H
+#define TEXTURE_H
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <png.h>
@@ -28,3 +31,5 @@ class TextureLoader
         
         t_err_t t_err;
 };
+
+#endif
