@@ -9,9 +9,9 @@ VAO::VAO(float *vertices, unsigned *indices, size_t nVertices, size_t nIndices) 
 
     glGenBuffers(1, &vbo_);
     glBindBuffer(GL_ARRAY_BUFFER, vbo_);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(*vertices) * nVertices, vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(*vertices) * nVertices * 7, vertices, GL_STATIC_DRAW);
 
-    const GLsizei stride = sizeof(float);
+    const GLsizei stride = 7 * sizeof(float);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, 0);
     glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, stride, (void*)(3 * sizeof(float)));
