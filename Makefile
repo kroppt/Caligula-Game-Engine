@@ -20,4 +20,4 @@ push:
 pull:
 	git pull origin master
 clean:
-	rm $-f (OBJECTS)
+	rm -f $(OBJECTS)
