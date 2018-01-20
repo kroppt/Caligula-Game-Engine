@@ -81,11 +81,11 @@ int main(int argc, char** argv){
     // green square
     float vertices[] =
     {
-        /*x, y, z, r, g, b, a*/
-         0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-         0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-        -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-        -0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f
+        /*x, y, z, r, g, b, a, s, t*/
+         0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f,
+         0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f,
+        -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f,
+        -0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f
     };
 
     unsigned indices[] =
