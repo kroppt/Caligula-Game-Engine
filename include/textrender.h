@@ -12,7 +12,7 @@ class TextRender {
         ~TextRender();
         TextRender(const std::string, const double);
         void ChangeFont(const std::string, const double);
-        int WriteText(const char *);
+        void WriteText(const char *);
     private:
         int font_size;
         std::string font_name;

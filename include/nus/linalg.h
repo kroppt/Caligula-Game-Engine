@@ -6,7 +6,7 @@
 #define _NUS_LINALG_H 1
 #include <tgmath.h>
 #include "nus/common.h"
-#ifdef _cplusplus
+#ifdef __cplusplus
 extern "C"{
 #endif
 //// Vector section
@@ -86,7 +86,7 @@ void mat4_set_row(vec4, mat4*, size_t rowidx);
 void mat4_set_col(vec4, mat4*, size_t colidx);
 void mat4_set_transpose(mat4*, mat4 matrix);
 void mat4_set_scale_aniso(mat4 *matrix, float x, float y, float z);
-#ifdef _cplusplus
+#ifdef __cplusplus
 }
 #endif
 #endif

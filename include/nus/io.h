@@ -7,8 +7,8 @@
 // includes
 #include "nus/common.h"
 //definitions
-#ifdef _cplusplus
-extern "C"{
+#ifdef __cplusplus
+extern "C" {
 #endif
 //get the size of a file
 size_t name_file_size(const char *filename);
@@ -17,7 +17,7 @@ size_t open_file_size(FILE *file);
 char *load_file(const char *filename);
 // 
 
-#ifdef _cplusplus
+#ifdef __cplusplus
 }
 #endif
 #endif

@@ -3,8 +3,6 @@
 #include <glad/glad.h>
 #include <vector>
 
-static void printProgramLog(GLuint program);
-static void printShaderLog(GLuint shader);
 GLuint createShader(GLenum shaderType, const char *filename);
 
 class ShaderProgram{

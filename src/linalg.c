@@ -21,17 +21,17 @@ vec4 vec4_scalar_mult(vec4 a, float s){
 }
 // is identical to vec3 cross and sets w to 1.0
 vec4 vec4_cross(vec4 a, vec4 b){
-  return (vec4){a.y*b.z - a.z*b.y, a.x*b.z - b.x*a.z, a.x*b.y - b.x * a.y, 1.0f};
+  return (vec4){.x=a.y*b.z - a.z*b.y, .y=a.x*b.z - b.x*a.z, .z= a.x*b.y - b.x * a.y, 1.0f};
 }
 //
 vec4 vec4_reflect(vec4 a, vec4 b){
   float p = 2.f * vec4_dot(a, b);
-  return (vec4){a.x - p*b.x, a.y - p*b.y, a.z - p*b.z, a.w - p*b.w};
+  return (vec4){.x= a.x - p*b.x, .y=a.y - p*b.y,.z= a.z - p*b.z, .w=a.w - p*b.w};
 }
 //
 vec4 vec4_project(vec4 a, vec4 b){
   float f =  vec4_dot(a,b)/vec4_dot(b,b);
-  return (vec4){f*b.x, f*b.y, f*b.z, f*b.w};
+  return (vec4){.x= f*b.x, .y= f*b.y, .z = f*b.z, .w = f*b.w};
 }
 //
 float vec4_len(vec4 a){
@@ -175,7 +175,7 @@ mat4 mat4_invert(mat4 m){
 void mat4_set_identity(mat4 *m){
   memset(m->m, 0, sizeof(m->m));
   for(int i = 0; i < 4; i++){
-     m->m[i<<2+i] = 1;
+     m->m[(i<<2) + i] = 1;
   }
 }
 

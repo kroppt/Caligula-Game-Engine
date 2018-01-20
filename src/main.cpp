@@ -6,7 +6,7 @@
 #include "audio/AudioInterface.h"
 #include "shader_program.h"
 #include "textrender.h"
-#include "utils.h"
+#include "nus/io.h"
 #include <vector>
 #include "vao.h"
 
@@ -106,6 +106,9 @@ int main(int argc, char** argv){
                     running = false;
                     break;
                 case SDL_KEYDOWN:
+                    if(event.key.keysym.sym == SDLK_ESCAPE){
+                        running = false;
+                    }
                     playSnd("test", 0,0,0,0,1.0);
                     break;
             }

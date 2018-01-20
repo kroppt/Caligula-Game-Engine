@@ -12,7 +12,7 @@ class VAO{
         GLuint vao_, vbo_, ibo_;
         float *vertices_;
         unsigned *indices_;
-        size_t nIndices_, nVertices_;
+        size_t nVertices_, nIndices_;
 
 };
 

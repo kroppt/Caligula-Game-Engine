@@ -1,10 +1,13 @@
+#include "nus/io.h"
 #include "shader_program.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdexcept>
-#include "utils.h"
 #include <sstream>
 #include <vector>
+
+static void printProgramLog(GLuint program);
+static void printShaderLog(GLuint shader);
 
 ShaderProgram::ShaderProgram(std::vector<GLuint> shaderList){
     // initialize OpenGL program and shader IDs
@@ -27,7 +30,7 @@ ShaderProgram::ShaderProgram(std::vector<GLuint> shaderList){
 
 GLuint createShader(GLenum shaderType, const char *filename){
     GLuint shader = glCreateShader(shaderType);
-    char *source = readFile(filename);
+    char *source = load_file(filename);
     glShaderSource(shader, 1, &source, NULL);
     glCompileShader(shader);
     free(source);
@@ -42,6 +45,7 @@ GLuint createShader(GLenum shaderType, const char *filename){
         oss << source << std::endl;
         throw std::invalid_argument(oss.str());
     }
+    return shader;
 }
 
 void ShaderProgram::bind(){

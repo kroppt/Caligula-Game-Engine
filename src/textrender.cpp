@@ -24,7 +24,7 @@ void TextRender::ChangeFont(const string font_name, const double font_size) {
     this->font_size = font_size;
 }
 
-int TextRender::WriteText(const char * text) {
+void TextRender::WriteText(const char * text) {
     this->font_name = "";
     this->font_size = FONTSIZE_DEFAULT;
     int width = this->font_size;
@@ -79,7 +79,7 @@ int TextRender::WriteText(const char * text) {
     cairo_glyph_t * cairo_glyphs = cairo_glyph_allocate(glyph_count);
     double current_x = 0;
     double current_y = 0;
-    for (int i = 0; i < glyph_count; i++) {
+    for (unsigned int i = 0; i < glyph_count; i++) {
         cairo_glyphs[i].index = glyph_info[i].codepoint;
         cairo_glyphs[i].x = current_x + glyph_pos[i].x_offset / 64.;
         cairo_glyphs[i].y = -(current_y + glyph_pos[i].y_offset / 64.);
