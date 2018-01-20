@@ -9,6 +9,8 @@
 #include "nus/io.h"
 #include <vector>
 #include "vao.h"
+#include <SDL_image.h>
+#include "texture.h"
 
 void gl_setup(void);
 
@@ -25,6 +27,9 @@ int main(int argc, char** argv){
     printf("Initialized SDL\n");
     int res_x = 1920;
     int res_y = 1080;
+
+    IMG_Init(IMG_INIT_JPG);
+    IMG_Init(IMG_INIT_PNG);
 
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
@@ -96,6 +101,9 @@ int main(int argc, char** argv){
 
     const unsigned nVertices = 4, nIndices = 6;
 
+    Texture texture("out.png");
+    texture.bind();
+
     VAO vao(vertices, indices, nVertices, nIndices);
     SDL_Event event;
     bool running = true;
@@ -120,6 +128,7 @@ int main(int argc, char** argv){
         SDL_Delay(1);
     }
 
+    texture.unbind();
     shaderProgram.unbind();
 
     SDL_DestroyWindow(win);
