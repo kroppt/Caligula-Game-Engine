@@ -94,11 +94,10 @@ int main(int argc, char** argv){
     const unsigned nVertices = 4, nIndices = 6;
 
     VAO vao(vertices, indices, nVertices, nIndices);
-
-
     SDL_Event event;
     bool running = true;
-    loadSound("test", "audio/test.mpcm");
+    printf("Loading SOUND\n");
+    loadSound("test", "sh.mpcm");
     while(running){
         while(SDL_PollEvent(&event)){
             switch(event.type){
