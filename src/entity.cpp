@@ -1,4 +1,4 @@
-#include "model.h"
+#include "entity.h"
 #include "vao.h"
 #include <sstream>
 #include <stdexcept>
@@ -6,25 +6,25 @@
 #include <vector>
 #include <iostream>
 
-Model::Model(VAO *vao, Texture *texture) : vao_(vao), texture_(texture) { }
+Entity::Entity(VAO *vao, Texture *texture) : vao_(vao), texture_(texture) { }
 
-Model::Model(float *vertices, unsigned *indices, size_t nVertices, size_t nIndices, Texture *texture) : texture_(texture) {
-
-}
-
-Model::Model(VAO *vao, const char *textureFilename, GLenum target): vao_(vao){
+Entity::Entity(float *vertices, unsigned *indices, size_t nVertices, size_t nIndices, Texture *texture) : texture_(texture) {
 
 }
 
-Model::Model(float *vertices, unsigned *indices, size_t nVertices, size_t nIndices, const char *textureFilename, GLenum target){
+Entity::Entity(VAO *vao, const char *textureFilename, GLenum target): vao_(vao){
 
 }
 
-Model::Model(const char *modelFilename, Texture *texture) : texture_(texture) {
+Entity::Entity(float *vertices, unsigned *indices, size_t nVertices, size_t nIndices, const char *textureFilename, GLenum target){
 
 }
 
-Model::Model(const char *modelFilename, const char *textureFilename, GLenum target){
+Entity::Entity(const char *ModelFilename, Texture *texture) : texture_(texture) {
+
+}
+
+Entity::Entity(const char *ModelFilename, const char *textureFilename, GLenum target){
 
 }
 
@@ -33,11 +33,11 @@ Model::Model(const char *modelFilename, const char *textureFilename, GLenum targ
  * Temporary, testing
  * 
  **/
-VAO* loadVAOfromOBJ(const char *modelFilename){
-    FILE *fp = fopen(modelFilename, "r");
+VAO* loadVAOfromOBJ(const char *ModelFilename){
+    FILE *fp = fopen(ModelFilename, "r");
     if(fp == NULL){
         std::ostringstream oss;
-        oss << "Error in opening model file \"" << modelFilename << "\"";
+        oss << "Error in opening Model file \"" << ModelFilename << "\"";
         throw std::invalid_argument(oss.str());
     }
 
@@ -65,8 +65,8 @@ VAO* loadVAOfromOBJ(const char *modelFilename){
         }else if(strcmp(lineHeader, "vt") == 0){
             float s, t;
             fscanf(fp, "%f %f\n", &s, &t);
-            tcoords.push_back(s);
-            tcoords.push_back(t);
+            vertices.push_back(s);
+            vertices.push_back(t);
         }else if(strcmp(lineHeader, "f") == 0){
             // xyz, triangle indices
             unsigned vxi, vyi, vzi, uvxi, uvyi, uvzi, nxi, nyi, nzi;
@@ -78,7 +78,7 @@ VAO* loadVAOfromOBJ(const char *modelFilename){
 
     }
 
-    std::cout << "\"" << modelFilename << "\" loaded successfully!" << std::endl;
+    std::cout << "\"" << ModelFilename << "\" loaded successfully!" << std::endl;
     
-    return new VAO(vertices.data(), indices.data(), tcoords.data(), vertices.size(), indices.size(), tcoords.size());
+    return new VAO(vertices.data(), indices.data(), vertices.size(), indices.size());
 }
