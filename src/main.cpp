@@ -87,10 +87,18 @@ int main(int argc, char** argv){
     float vertices[] =
     {
         /*x, y, z, r, g, b, a, s, t*/
-         0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f,
-         0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f,
-        -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-        -0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f
+         0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
+         0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
+        -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
+        -0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
+    };
+
+    float tcoords[] =
+    {
+        1.0f, 0.0f,
+        1.0f, 1.0f,
+        0.0f, 1.0f,
+        0.0f, 0.0f
     };
 
     unsigned indices[] =
@@ -104,7 +112,7 @@ int main(int argc, char** argv){
     Texture texture("out.png");
     texture.bind();
 
-    VAO vao(vertices, indices, nVertices, nIndices);
+    VAO vao(vertices, indices, tcoords, nVertices, nIndices);
     SDL_Event event;
     bool running = true;
     loadSound("test", "audio/sh.mpcm");
