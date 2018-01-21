@@ -3,6 +3,8 @@
 #include "vao.h"
 #include "texture.h"
 
+VAO* loadVAOfromOBJ(const char *modelFilename);
+
 class Model{
     public:
         Model(VAO *vao, Texture *texture);

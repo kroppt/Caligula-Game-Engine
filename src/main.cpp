@@ -11,12 +11,13 @@
 #include "vao.h"
 #include <SDL_image.h>
 #include "texture.h"
+#include "model.h"
 
 void gl_setup(void);
 
 int main(int argc, char** argv){
     printf("Initializing Caligula version 0\n");
-    initAudio();
+    // initAudio();
     printf("Initialized Audio\n");
     // Initialize video only to avoid failure
     if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER|SDL_INIT_EVENTS) != 0) {
@@ -107,15 +108,17 @@ int main(int argc, char** argv){
         2, 3, 0
     };
 
-    const unsigned nVertices = 4, nIndices = 6;
+    const unsigned nVertices = 4, nIndices = 6, nTcoords = 4;
 
     Texture texture("out.png");
     texture.bind();
 
-    VAO vao(vertices, indices, tcoords, nVertices, nIndices);
+    //VAO vao(vertices, indices, tcoords, nVertices, nIndices, nTcoords);
+    VAO *vao = loadVAOfromOBJ("resources/torus.obj");
+
     SDL_Event event;
     bool running = true;
-    loadSound("test", "audio/sh.mpcm");
+    // loadSound("test", "audio/sh.mpcm");
     while(running){
         while(SDL_PollEvent(&event)){
             switch(event.type){
@@ -126,12 +129,12 @@ int main(int argc, char** argv){
                     if(event.key.keysym.sym == SDLK_ESCAPE){
                         running = false;
                     }
-                    playSnd("test", 1,1,1,1,1);
+                    // playSnd("test", 1,1,1,1,1);
                     break;
             }
         }
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        vao.render();
+        vao->render();
         SDL_GL_SwapWindow(win);
         SDL_Delay(1);
     }
@@ -142,7 +145,7 @@ int main(int argc, char** argv){
     SDL_DestroyWindow(win);
     SDL_Quit();
     std::cout << "Reached end of file successfully." << std::endl;
-    quitAudio();
+    // quitAudio();
     return 0;
 }
 

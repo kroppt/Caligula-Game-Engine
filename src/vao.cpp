@@ -1,8 +1,9 @@
 #include "vao.h"
 #include "glad/glad.h"
+#include <stdio.h>
 
-VAO::VAO(float *vertices, unsigned *indices, float *tcoords, size_t nVertices, size_t nIndices) :
- vertices_(vertices), indices_(indices), tcoords_(tcoords), nVertices_(nVertices), nIndices_(nIndices) {
+VAO::VAO(float *vertices, unsigned *indices, float *tcoords, size_t nVertices, size_t nIndices, size_t nTcoords) :
+ vertices_(vertices), indices_(indices), tcoords_(tcoords), nVertices_(nVertices), nIndices_(nIndices), nTcoords_(nTcoords) {
     // create vertex array object
     glGenVertexArrays(1, &vao_);
     glBindVertexArray(vao_);
@@ -22,16 +23,12 @@ VAO::VAO(float *vertices, unsigned *indices, float *tcoords, size_t nVertices, s
     glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, vertexStride, (void*)(3 * sizeof(float)));
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-
-    // set up texture coordinate buffer (test)
-    GLuint txbo;
-    glGenBuffers(1, &txbo);
-    glBindBuffer(GL_ARRAY_BUFFER, txbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(*tcoords) * nVertices * 2, tcoords, GL_STATIC_DRAW);
+    // set up texture coordinate buffer
+    glGenBuffers(1, &txbo_);
+    glBindBuffer(GL_ARRAY_BUFFER, txbo_);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(*tcoords) * nTcoords * 2, tcoords, GL_STATIC_DRAW);
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-
 
     // set up index buffer
     glGenBuffers(1, &ibo_);
