@@ -78,8 +78,8 @@ void VAO::render(){
     // setup vertex array object
     glBindVertexArray(vao_);
     glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
-    glEnableVertexAttribArray(2);
+    //glEnableVertexAttribArray(1);
+    //glEnableVertexAttribArray(2);
 
     // submit the draw call to the GPU
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_);
@@ -87,8 +87,8 @@ void VAO::render(){
 
     // cleanup
     glDisableVertexAttribArray(0);
-    glDisableVertexAttribArray(1);
-    glDisableVertexAttribArray(2);
+    //glDisableVertexAttribArray(1);
+    //glDisableVertexAttribArray(2);
     glBindVertexArray(0);
 }
 
@@ -154,5 +154,5 @@ VAO* loadVAOfromPLY(const char *modelFilename){
     #endif
     std::cout << "\"" << modelFilename << "\" loaded successfully!" << std::endl;
     
-    return new VAO(vertices.data(), indices.data(), vertices.size()/3, indices.size() /3, true);
+    return new VAO(vertices.data(), indices.data(), vertices.size()/3, indices.size(), true);
 }
