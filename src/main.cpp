@@ -11,7 +11,7 @@
 #include "vao.h"
 #include <SDL_image.h>
 #include "texture.h"
-#include "entity.h"
+#include "model.h"
 
 void gl_setup(void);
 
@@ -105,8 +105,8 @@ int main(int argc, char** argv){
     Texture texture("out.png");
     texture.bind();
 
-    //VAO vao(vertices, indices, tcoords, nVertices, nIndices, nTcoords);
-    VAO *vao = loadVAOfromOBJ("resources/torus.obj");
+    VAO vao(vertices, indices, nVertices, nIndices);
+    // VAO *vao = loadVAOfromOBJ("resources/torus.obj");
 
     SDL_Event event;
     bool running = true;
@@ -126,7 +126,7 @@ int main(int argc, char** argv){
             }
         }
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        vao->render();
+        vao.render();
         SDL_GL_SwapWindow(win);
         SDL_Delay(1);
     }

@@ -3,7 +3,7 @@
 #include <stdio.h>
 
 VAO::VAO(float *vertices, unsigned *indices, size_t nVertices, size_t nIndices) :
- vertices_(vertices), indices_(indices), nVertices_(nVertices), nIndices_(nIndices){
+ vertices_(vertices), indices_(indices), nVertices_(nVertices), nIndices_(nIndices) {
     // create vertex array object
     glGenVertexArrays(1, &vao_);
     glBindVertexArray(vao_);
@@ -14,11 +14,11 @@ VAO::VAO(float *vertices, unsigned *indices, size_t nVertices, size_t nIndices) 
     // set up vertex buffer
     glGenBuffers(1, &vbo_);
     glBindBuffer(GL_ARRAY_BUFFER, vbo_);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(*vertices) * nVertices * 7, vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(*vertices) * nVertices * 9, vertices, GL_STATIC_DRAW);
 
     const GLsizei vertexStride = 9 * sizeof(float);
 
-    // how to use the 7-D vertices (x,y,z,r,g,b,a), and use currently bound VBO
+    // how to use the 9-D vertices (x,y,z,r,g,b,a,s,t), and use currently bound VBO
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, vertexStride, 0);
     glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, vertexStride, (void*)(3 * sizeof(float)));
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, vertexStride, (void*)(7 * sizeof(float)));

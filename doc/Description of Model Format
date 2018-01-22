@@ -4,10 +4,10 @@ float is a 32 bit LE IEEE 754 float
 
 Constants:
 MAGIC    = 0x21524111
-ENDMAGIC = 
+ENDMAGIC = 0x89382924
 Structures:
 vertex_position = vector of 3 floats <x, y, z>
-vertex_color    = vector of 3 floats <r, g, b>
+vertex_color    = vector of 4 floats <r, g, b, a>
 vertex_texture  = vector of 2 floats <s, t>
 vertex_normal   = vector of 3 floats <X, Y, Z>
 
@@ -16,4 +16,4 @@ vertex = <vertex_position|vertex_color|vertex_texture|vertex_normal>
 vertices = [ vertex ...]
 indices = [ uint32_t ... ] 
 Format:
-MAGIC|# of vertices|# of indices | vertices | indices | ENDMAGIC
+MAGIC | # of vertices | # of indices | vertices | indices | ENDMAGIC

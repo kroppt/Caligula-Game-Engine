@@ -10,7 +10,7 @@ class VAO{
         void render(void);
     private:
         GLuint vao_, vbo_, ibo_;
-        float *vertices_, *tcoords_;
+        float *vertices_;
         unsigned *indices_;
         size_t nVertices_, nIndices_;
 
