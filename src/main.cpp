@@ -121,7 +121,7 @@ int main(int argc, char** argv){
                     if(event.key.keysym.sym == SDLK_ESCAPE){
                         running = false;
                     }
-                    // playSnd("test", 1,1,1,1,1);
+                    playSnd("test", 1,1,1,1,1);
                     break;
             }
         }

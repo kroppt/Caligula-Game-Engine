@@ -34,6 +34,7 @@ Entity::Entity(const char *ModelFilename, const char *textureFilename, GLenum ta
  * 
  **/
 VAO* loadVAOfromOBJ(const char *ModelFilename){
+    //XXX GET RID OF THIS
     FILE *fp = fopen(ModelFilename, "r");
     if(fp == NULL){
         std::ostringstream oss;
@@ -62,11 +63,13 @@ VAO* loadVAOfromOBJ(const char *ModelFilename){
             vertices.push_back(1.0f);
             vertices.push_back(1.0f);
             vertices.push_back(1.0f);
+            //
+
         }else if(strcmp(lineHeader, "vt") == 0){
             float s, t;
             fscanf(fp, "%f %f\n", &s, &t);
-            vertices.push_back(s);
-            vertices.push_back(t);
+            //vertices.push_back(s);
+            //vertices.push_back(t);
         }else if(strcmp(lineHeader, "f") == 0){
             // xyz, triangle indices
             unsigned vxi, vyi, vzi, uvxi, uvyi, uvzi, nxi, nyi, nzi;
