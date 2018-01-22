@@ -1,6 +1,13 @@
 #include "vao.h"
 #include "glad/glad.h"
 #include <stdio.h>
+#include <iostream>
+#include <fstream>
+#include <stdio.h>
+#include <string>
+#include <sstream>
+#include <stdexcept>
+#include <vector>
 
 VAO::VAO(float *vertices, unsigned *indices, size_t nVertices, size_t nIndices) :
  vertices_(vertices), indices_(indices), nVertices_(nVertices), nIndices_(nIndices) {
@@ -59,4 +66,46 @@ VAO::~VAO(){
     glDeleteBuffers(1, &vbo_);
     glDeleteBuffers(1, &ibo_);
     glDeleteVertexArrays(1, &vao_);
+}
+
+/**
+ * This function will attempt to parse a PLY file representing a model.
+ * 
+ * @param modelFilename char* representing filename of model
+ * @return a pointer to a VAO loaded from the specified file
+ **/
+VAO* loadVAOfromPLY(const char *modelFilename){
+    std::ifstream in(modelFilename);
+    if(!in){
+        std::ostringstream oss;
+        oss << "Error in opening Model file \"" << modelFilename << "\"";
+        throw std::invalid_argument(oss.str());
+    }
+
+    std::vector<float> vertices;
+    std::vector<unsigned> indices;
+
+    for(std::string line; std::getline(in, line);){
+        float x, y, z, nx, ny, nz, s, t;
+        int matches = sscanf(line.c_str(), "%f %f %f %f %f %f %f %f", &x, &y, &z, &nx, &ny, &nz, &s, &t);
+        if(matches == 8){
+            vertices.push_back(x);
+            vertices.push_back(y);
+            vertices.push_back(z);
+            vertices.push_back(1);
+            vertices.push_back(1);
+            vertices.push_back(1);
+            vertices.push_back(1);
+            vertices.push_back(s);
+            vertices.push_back(t);
+        }else if(matches == 4 && x == 3){
+            indices.push_back(y);
+            indices.push_back(z);
+            indices.push_back(nx);
+        }
+    }
+
+    std::cout << "\"" << modelFilename << "\" loaded successfully!" << std::endl;
+    
+    return new VAO(vertices.data(), indices.data(), vertices.size(), indices.size());
 }

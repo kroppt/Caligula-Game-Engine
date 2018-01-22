@@ -16,4 +16,6 @@ class VAO{
 
 };
 
+VAO* loadVAOfromPLY(const char *modelFilename);
+
 #endif

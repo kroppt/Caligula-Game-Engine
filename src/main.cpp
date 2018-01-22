@@ -13,7 +13,7 @@
 #include "texture.h"
 #include "entity.h"
 
-void gl_setup(void);
+void setup(void);
 
 int main(int argc, char** argv){
     printf("Initializing Caligula version 0\n");
@@ -65,7 +65,7 @@ int main(int argc, char** argv){
         return 1;
     }
 
-    gl_setup();
+    setup();
     TextRender text_render = TextRender();
     text_render.ChangeFontSize(FONTSIZE_LARGE);
     text_render.ChangeFontRGBA(1., 0., 1., 1);
@@ -84,59 +84,7 @@ int main(int argc, char** argv){
     ShaderProgram shaderProgram(shaderList);
     shaderProgram.bind();
 
-    // green square
-    float vertices[] =
-    {
-        /*x, y, z, r, g, b, a, s, t*/
-        -1.000000f, -1.000000f, 1.000000f, -1.000000f, 0.000000f, 0.000000f,1.0f,0.141894f,0.000226f,
-        -1.000000f,1.000000f,-1.000000f,-1.000000f,0.000000f,0.000000f,1.0f,0.000226f,0.999774f,
-        -1.000000f,-1.000000f,-1.000000f,-1.000000f,0.000000f,0.000000f,1.0f,0.000226f,0.000226f,
-        -1.000000f,1.000000f,1.000000f,0.000000f,1.000000f,-0.000000f,1.0f,0.710825f,0.000226f,
-        1.000000f,1.000000f,-1.000000f,0.000000f,1.000000f,-0.000000f,1.0f,0.852493f,0.999774f,
-        -1.000000f,1.000000f,-1.000000f,0.000000f,1.000000f,-0.000000f,1.0f,0.710825f,0.999774f,
-        1.000000f,1.000000f,1.000000f,1.000000f,0.000000f,-0.000000f,1.0f,0.710373f,0.999774f,
-        1.000000f,-1.000000f,-1.000000f,1.000000f,0.000000f,-0.000000f,1.0f,0.568705f,0.000226f,
-        1.000000f,1.000000f,-1.000000f,1.000000f,0.000000f,-0.000000f,1.0f,0.710373f,0.000226f,
-        1.000000f,-1.000000f,1.000000f,0.000000f,-1.000000f,0.000000f,1.0f,0.284014f,0.999774f,
-        -1.000000f,-1.000000f,-1.000000f,0.000000f,-1.000000f,0.000000f,1.0f,0.142346f,0.000226f,
-        1.000000f,-1.000000f,-1.000000f,0.000000f,-1.000000f,0.000000f,1.0f,0.284014f,0.000226f,
-        1.000000f,1.000000f,-1.000000f,0.000000f,0.000000f,-1.000000f,1.0f,0.426585f,0.999774f,
-        -1.000000f,-1.000000f,-1.000000f,0.000000f,0.000000f,-1.000000f,1.0f,0.568254f,0.000226f,
-        -1.000000f,1.000000f,-1.000000f,0.000000f,0.000000f,-1.000000f,1.0f,0.568254f,0.999774f,
-        -1.000000f,1.000000f,1.000000f,0.000000f,0.000000f,1.000000f,1.0f,0.284465f,0.999774f,
-        1.000000f,-1.000000f,1.000000f,0.000000f,0.000000f,1.000000f,1.0f,0.426134f,0.000226f,
-        1.000000f,1.000000f,1.000000f,0.000000f,0.000000f,1.000000f,1.0f,0.426134f,0.999774f,
-        -1.000000f,1.000000f,1.000000f,-1.000000f,0.000000f,0.000000f,1.0f,0.141894f,0.999774f,
-        1.000000f,1.000000f,1.000000f,0.000000f,1.000000f,-0.000000f,1.0f,0.852493f,0.000226f,
-        1.000000f,-1.000000f,1.000000f,1.000000f,0.000000f,0.000000f,1.0f,0.568705f,0.999774f,
-        -1.000000f,-1.000000f,1.000000f,0.000000f,-1.000000f,0.000000f,1.0f,0.142346f,0.999774f,
-        1.000000f,-1.000000f,-1.000000f,0.000000f,0.000000f,-1.000000f,1.0f,0.426585f,0.000226f,
-        -1.000000f,-1.000000f,1.000000f,0.000000f,-0.000000f,1.000000f,1.0f,0.284465f,0.000226f
-    };
-
-    unsigned indices[] =
-    {
-        0, 1, 2,
-        3,4,5,
-        6,7,8,
-        9,10,11,
-        12,13,14,
-        15,16,17,
-        0,18,1,
-        3,19,4,
-        6,20,7,
-        9,21,10,
-        12,22,13,
-        15,23,16
-    };
-
-    const unsigned nVertices = 24, nIndices = 36;
-
-    Texture texture("out.png");
-    texture.bind();
-
-    // VAO vao(vertices, indices, nVertices, nIndices);
-    VAO *vao = loadVAOfromPLY("resources/torus.ply");
+    Entity *torus = new Entity("resources/torus.ply", "out.png");
 
     SDL_Event event;
     bool running = true;
@@ -156,12 +104,11 @@ int main(int argc, char** argv){
             }
         }
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        vao->render();
+        torus->render(0);
         SDL_GL_SwapWindow(win);
         SDL_Delay(1);
     }
 
-    texture.unbind();
     shaderProgram.unbind();
 
     SDL_DestroyWindow(win);
@@ -171,7 +118,7 @@ int main(int argc, char** argv){
     return 0;
 }
 
-void gl_setup(){
+void setup(){
     glClearColor(1.0f, 0.5f, 0.0f, 1.0f);
     glEnable(GL_MULTISAMPLE);
     // face culling
