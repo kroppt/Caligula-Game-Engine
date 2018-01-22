@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <SDL2/SDL.h>
+#include "nus/linalg.h"
 #include "glad/glad.h"
 #include <SDL2/SDL_opengl.h>
 #include "audio/AudioInterface.h"
@@ -13,33 +14,14 @@
 #include "texture.h"
 #include "entity.h"
 
+void init(void);
 void setup(void);
 
 int main(int argc, char** argv){
-    printf("Initializing Caligula version 0\n");
-    initAudio();
-    printf("Initialized Audio\n");
-    // Initialize video only to avoid failure
-    if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER|SDL_INIT_EVENTS) != 0) {
-        printf("SDL_Init error: %s\n", SDL_GetError());
-        SDL_Quit();
-        return 1;
-    }
-    printf("Initialized SDL\n");
+    init();
+
     int res_x = 1920;
     int res_y = 1080;
-
-    IMG_Init(IMG_INIT_JPG);
-    IMG_Init(IMG_INIT_PNG);
-
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
-
-    /* Turn on double buffering with a 24bit Z buffer.
-     * You may need to change this to 16 or 32 for your system */
-    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-
     SDL_Window *win = SDL_CreateWindow(
         "Test Window",
         SDL_WINDOWPOS_CENTERED,
@@ -83,9 +65,11 @@ int main(int argc, char** argv){
 
     ShaderProgram shaderProgram(shaderList);
     shaderProgram.bind();
-
-    Entity *torus = new Entity("resources/torus.ply", "out.png");
-
+    mat4 worldToCamera; mat4_set_identity(&worldToCamera);
+    Entity *torus = new Entity("resources/dragon.ply", "out.png");
+    GLint modelToWorldLocation  = glGetUniformLocation(shaderProgram.getProgramID(), "modelToWorld" );
+    GLint worldToCameraLocation = glGetUniformLocation(shaderProgram.getProgramID(), "worldToCamera");
+    glUniformMatrix4fv(worldToCameraLocation, 1, false, (float*)&worldToCamera.m);
     SDL_Event event;
     bool running = true;
     loadSound("test", "audio/sh.mpcm");
@@ -96,15 +80,19 @@ int main(int argc, char** argv){
                     running = false;
                     break;
                 case SDL_KEYDOWN:
-                    if(event.key.keysym.sym == SDLK_ESCAPE){
-                        running = false;
+                    switch(event.key.keysym.sym){
+                        case SDLK_ESCAPE: running = false; break;
+                        case SDLK_LEFT: torus->rotation_.y += 0.01f; break;
+                        case SDLK_RIGHT: torus->rotation_.y -= 0.01f; break;
+                        case SDLK_UP: torus->rotation_.z += 0.01f; break;
+                        case SDLK_DOWN: torus->rotation_.z -= 0.01f; break;
+                        default: playSnd("test", 1,1,1,1,1); break;
                     }
-                    playSnd("test", 1,1,1,1,1);
                     break;
             }
         }
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        torus->render(0);
+        torus->render(0, modelToWorldLocation);
         SDL_GL_SwapWindow(win);
         SDL_Delay(1);
     }
@@ -116,6 +104,30 @@ int main(int argc, char** argv){
     std::cout << "Reached end of file successfully." << std::endl;
     quitAudio();
     return 0;
+}
+
+void init(){
+    printf("Initializing Caligula version 0\n");
+    initAudio();
+    printf("Initialized Audio\n");
+    // Initialize video only to avoid failure
+    if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER|SDL_INIT_EVENTS) != 0) {
+        printf("SDL_Init error: %s\n", SDL_GetError());
+        SDL_Quit();
+        exit(1);
+    }
+    printf("Initialized SDL\n");
+
+    IMG_Init(IMG_INIT_JPG);
+    IMG_Init(IMG_INIT_PNG);
+
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
+
+    /* Turn on double buffering with a 24bit Z buffer.
+     * You may need to change this to 16 or 32 for your system */
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 }
 
 void setup(){

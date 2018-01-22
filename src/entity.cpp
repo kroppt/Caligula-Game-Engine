@@ -1,3 +1,4 @@
+#include "nus/linalg.h"
 #include "entity.h"
 #include "vao.h"
 
@@ -11,10 +12,24 @@ Entity::Entity(VAO *vao, Texture *texture) : vao_(vao), texture_(texture) { }
 Entity::Entity(const char *modelFilename, const char *textureFilename){
     vao_ = loadVAOfromPLY(modelFilename);
     texture_ = new Texture(textureFilename);
+    position_.x = 0.0f; position_.y = 0.0f; position_.z = 0.0f; position_.w = 1.0f;
+    rotation_.x = 1; rotation_.y = .0f; rotation_.z = .0f; rotation_.w = 0;
 }
 
-void Entity::render(float alpha){
+void Entity::render(float alpha, uint uniformLocation){
     // TODO implement positioning and rotation of entity
+    mat4 mat, rot, res;
+    //
+    mat4_set_translate(&mat, position_);
+    //mat4_set_identity(&)
+    vec4 rotat = vec4_norm(rotation_);
+    mat4_set_rotation(&rot, rotat);
+
+    mat4_set_mul(&res, rot, mat);
+    //mat4_set_identity(&res);
+    float *f = (float*)&res.m;
+    glUniformMatrix4fv(uniformLocation, 1, false, f);
+
     texture_->bind();
     vao_->render();
     texture_->unbind();

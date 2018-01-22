@@ -280,3 +280,20 @@ void mat4_set_scale_aniso(mat4 *m, float x, float y, float z){
   };
   memcpy(m->m, ab, sizeof(ab));
 }
+
+void mat4_set_translate(mat4*m, vec4 v){
+  mat4_set_identity(m);
+  m->m03 = v.x;
+  m->m13 = v.y;
+  m->m23 = v.z;
+}
+
+void mat4_set_rotation(mat4 *m, vec4 v){
+  float ab[] = {
+    v.x*v.x+v.y*v.y - v.z*v.z - v.w * v.w, 2 * v.y * v.z - 2 * v.x * v.w, 2 * v.y * v.w + 2 * v.x * v.z, 0,
+    2 * v.y * v.z + 2 * v.x * v.w , v.x*v.x-v.y*v.y + v.z*v.z - v.w * v.w, 2*v.z * v.w - 2 * v.x * v.y, 0,
+    2 * v.y * v.w - 2 * v.x * v.z , 2 * v.z * v.w + 2 * v.x * v.y ,  v.x*v.x-v.y*v.y - v.z*v.z + v.w * v.w, 0,
+    0,0,0,1
+  };
+  memcpy(m->m, ab, sizeof(ab));
+}

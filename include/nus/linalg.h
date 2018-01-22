@@ -86,6 +86,7 @@ void mat4_set_row(vec4, mat4*, size_t rowidx);
 void mat4_set_col(vec4, mat4*, size_t colidx);
 void mat4_set_transpose(mat4*, mat4 matrix);
 void mat4_set_scale_aniso(mat4 *matrix, float x, float y, float z);
+void mat4_set_rotation(mat4 *m, vec4 quat);
 #ifdef __cplusplus
 }
 #endif

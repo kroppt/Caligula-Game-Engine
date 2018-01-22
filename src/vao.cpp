@@ -103,6 +103,19 @@ VAO* loadVAOfromPLY(const char *modelFilename){
             indices.push_back(z);
             indices.push_back(nx);
         }
+        #ifndef NO_SUPER_MEGA_HACK
+        else if(matches == 3){
+            vertices.push_back(x);
+            vertices.push_back(y);
+            vertices.push_back(z);
+            vertices.push_back(1);
+            vertices.push_back(1);
+            vertices.push_back(1);
+            vertices.push_back(1);
+            vertices.push_back(0);
+            vertices.push_back(0);
+        }
+        #endif
     }
 
     std::cout << "\"" << modelFilename << "\" loaded successfully!" << std::endl;

@@ -21,12 +21,12 @@ class Entity{
         void setVelocity(vec4 velocity) { velocity_ = velocity; }
         void setRotation(vec4 rotation) { rotation_ = rotation; }
         void setAngularVelocity(vec4 angularVelocity) { angularVelocity_ = angularVelocity; }
-        void render(float alpha);
+        void render(float alpha, uint uniformLocation);
 
+        vec4 position_, velocity_, rotation_, angularVelocity_;
     private:
         VAO *vao_;
         Texture *texture_;
-        vec4 position_, velocity_, rotation_, angularVelocity_;
 
 };
 
