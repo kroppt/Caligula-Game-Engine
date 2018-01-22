@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <fstream>
+#include <stdio.h>
 
 Entity::Entity(VAO *vao, Texture *texture) : vao_(vao), texture_(texture) { }
 
@@ -33,52 +35,35 @@ Entity::Entity(const char *ModelFilename, const char *textureFilename, GLenum ta
  * Temporary, testing
  * 
  **/
-VAO* loadVAOfromOBJ(const char *ModelFilename){
-    //XXX GET RID OF THIS
-    FILE *fp = fopen(ModelFilename, "r");
-    if(fp == NULL){
+VAO* loadVAOfromPLY(const char *ModelFilename){
+    std::ifstream in(ModelFilename);
+    if(!in){
         std::ostringstream oss;
         oss << "Error in opening Model file \"" << ModelFilename << "\"";
         throw std::invalid_argument(oss.str());
     }
 
     std::vector<float> vertices;
-    std::vector<float> tcoords;
     std::vector<unsigned> indices;
 
-    while(true){
-        // sloppy assumption
-        char lineHeader[128];
-        // read the first word of the line
-        int res = fscanf(fp, "%s", lineHeader);
-        if(res == EOF) break;
-        if(strcmp(lineHeader, "v") == 0){
-            float x, y, z;
-            fscanf(fp, "%f %f %f\n", &x, &y, &z);
+    for(std::string line; std::getline(in, line);){
+        float x, y, z, nx, ny, nz, s, t;
+        int matches = sscanf(line.c_str(), "%f %f %f %f %f %f %f %f", &x, &y, &z, &nx, &ny, &nz, &s, &t);
+        if(matches == 8){
             vertices.push_back(x);
             vertices.push_back(y);
             vertices.push_back(z);
-            // TEST: for color, use white opaque
-            vertices.push_back(1.0f);
-            vertices.push_back(1.0f);
-            vertices.push_back(1.0f);
-            vertices.push_back(1.0f);
-            //
-
-        }else if(strcmp(lineHeader, "vt") == 0){
-            float s, t;
-            fscanf(fp, "%f %f\n", &s, &t);
-            //vertices.push_back(s);
-            //vertices.push_back(t);
-        }else if(strcmp(lineHeader, "f") == 0){
-            // xyz, triangle indices
-            unsigned vxi, vyi, vzi, uvxi, uvyi, uvzi, nxi, nyi, nzi;
-            fscanf(fp, "%u/%u/%u %u/%u/%u %u/%u/%u\n", &vxi, &uvxi, &nxi, &vyi, &uvyi, &nyi ,&vzi, &uvzi, &nzi);
-            indices.push_back(vxi);
-            indices.push_back(vyi);
-            indices.push_back(vzi);
+            vertices.push_back(1);
+            vertices.push_back(1);
+            vertices.push_back(1);
+            vertices.push_back(1);
+            vertices.push_back(s);
+            vertices.push_back(t);
+        }else if(matches == 4 && x == 3){
+            indices.push_back(y);
+            indices.push_back(z);
+            indices.push_back(nx);
         }
-
     }
 
     std::cout << "\"" << ModelFilename << "\" loaded successfully!" << std::endl;

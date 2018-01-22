@@ -11,7 +11,7 @@
 #include "vao.h"
 #include <SDL_image.h>
 #include "texture.h"
-#include "model.h"
+#include "entity.h"
 
 void gl_setup(void);
 
@@ -88,25 +88,55 @@ int main(int argc, char** argv){
     float vertices[] =
     {
         /*x, y, z, r, g, b, a, s, t*/
-         0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
-         0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-        -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
-        -0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f
+        -1.000000f, -1.000000f, 1.000000f, -1.000000f, 0.000000f, 0.000000f,1.0f,0.141894f,0.000226f,
+        -1.000000f,1.000000f,-1.000000f,-1.000000f,0.000000f,0.000000f,1.0f,0.000226f,0.999774f,
+        -1.000000f,-1.000000f,-1.000000f,-1.000000f,0.000000f,0.000000f,1.0f,0.000226f,0.000226f,
+        -1.000000f,1.000000f,1.000000f,0.000000f,1.000000f,-0.000000f,1.0f,0.710825f,0.000226f,
+        1.000000f,1.000000f,-1.000000f,0.000000f,1.000000f,-0.000000f,1.0f,0.852493f,0.999774f,
+        -1.000000f,1.000000f,-1.000000f,0.000000f,1.000000f,-0.000000f,1.0f,0.710825f,0.999774f,
+        1.000000f,1.000000f,1.000000f,1.000000f,0.000000f,-0.000000f,1.0f,0.710373f,0.999774f,
+        1.000000f,-1.000000f,-1.000000f,1.000000f,0.000000f,-0.000000f,1.0f,0.568705f,0.000226f,
+        1.000000f,1.000000f,-1.000000f,1.000000f,0.000000f,-0.000000f,1.0f,0.710373f,0.000226f,
+        1.000000f,-1.000000f,1.000000f,0.000000f,-1.000000f,0.000000f,1.0f,0.284014f,0.999774f,
+        -1.000000f,-1.000000f,-1.000000f,0.000000f,-1.000000f,0.000000f,1.0f,0.142346f,0.000226f,
+        1.000000f,-1.000000f,-1.000000f,0.000000f,-1.000000f,0.000000f,1.0f,0.284014f,0.000226f,
+        1.000000f,1.000000f,-1.000000f,0.000000f,0.000000f,-1.000000f,1.0f,0.426585f,0.999774f,
+        -1.000000f,-1.000000f,-1.000000f,0.000000f,0.000000f,-1.000000f,1.0f,0.568254f,0.000226f,
+        -1.000000f,1.000000f,-1.000000f,0.000000f,0.000000f,-1.000000f,1.0f,0.568254f,0.999774f,
+        -1.000000f,1.000000f,1.000000f,0.000000f,0.000000f,1.000000f,1.0f,0.284465f,0.999774f,
+        1.000000f,-1.000000f,1.000000f,0.000000f,0.000000f,1.000000f,1.0f,0.426134f,0.000226f,
+        1.000000f,1.000000f,1.000000f,0.000000f,0.000000f,1.000000f,1.0f,0.426134f,0.999774f,
+        -1.000000f,1.000000f,1.000000f,-1.000000f,0.000000f,0.000000f,1.0f,0.141894f,0.999774f,
+        1.000000f,1.000000f,1.000000f,0.000000f,1.000000f,-0.000000f,1.0f,0.852493f,0.000226f,
+        1.000000f,-1.000000f,1.000000f,1.000000f,0.000000f,0.000000f,1.0f,0.568705f,0.999774f,
+        -1.000000f,-1.000000f,1.000000f,0.000000f,-1.000000f,0.000000f,1.0f,0.142346f,0.999774f,
+        1.000000f,-1.000000f,-1.000000f,0.000000f,0.000000f,-1.000000f,1.0f,0.426585f,0.000226f,
+        -1.000000f,-1.000000f,1.000000f,0.000000f,-0.000000f,1.000000f,1.0f,0.284465f,0.000226f
     };
 
     unsigned indices[] =
     {
         0, 1, 2,
-        2, 3, 0
+        3,4,5,
+        6,7,8,
+        9,10,11,
+        12,13,14,
+        15,16,17,
+        0,18,1,
+        3,19,4,
+        6,20,7,
+        9,21,10,
+        12,22,13,
+        15,23,16
     };
 
-    const unsigned nVertices = 4, nIndices = 6;
+    const unsigned nVertices = 24, nIndices = 36;
 
     Texture texture("out.png");
     texture.bind();
 
-    VAO vao(vertices, indices, nVertices, nIndices);
-    // VAO *vao = loadVAOfromOBJ("resources/torus.obj");
+    // VAO vao(vertices, indices, nVertices, nIndices);
+    VAO *vao = loadVAOfromPLY("resources/torus.ply");
 
     SDL_Event event;
     bool running = true;
@@ -126,7 +156,7 @@ int main(int argc, char** argv){
             }
         }
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        vao.render();
+        vao->render();
         SDL_GL_SwapWindow(win);
         SDL_Delay(1);
     }
@@ -143,19 +173,19 @@ int main(int argc, char** argv){
 
 void gl_setup(){
     glClearColor(1.0f, 0.5f, 0.0f, 1.0f);
-    // glEnable(GL_MULTISAMPLE);
-    // // face culling
-    // // glEnable(GL_CULL_FACE);
-    // glCullFace(GL_BACK);
-    // glFrontFace(GL_CW);
-    // // depth test
-    // glEnable(GL_DEPTH_TEST);
-    // glDepthMask(true);
-    // glDepthFunc(GL_LESS);
-    // glDepthRange(0.01f, 1.0f);
-    // glEnable(GL_DEPTH_CLAMP);
-    // // alpha blending
-    // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    // glEnable(GL_BLEND);
+    glEnable(GL_MULTISAMPLE);
+    // face culling
+    // glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    glFrontFace(GL_CW);
+    // depth test
+    glEnable(GL_DEPTH_TEST);
+    glDepthMask(true);
+    glDepthFunc(GL_LESS);
+    glDepthRange(0.01f, 1.0f);
+    glEnable(GL_DEPTH_CLAMP);
+    // alpha blending
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
 
 }

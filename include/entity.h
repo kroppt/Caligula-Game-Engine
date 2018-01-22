@@ -3,7 +3,7 @@
 #include "vao.h"
 #include "texture.h"
 
-VAO* loadVAOfromOBJ(const char *modelFilename);
+VAO* loadVAOfromPLY(const char *modelFilename);
 
 class Entity{
     public:
