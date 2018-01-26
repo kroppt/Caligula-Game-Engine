@@ -283,9 +283,9 @@ void mat4_set_scale_aniso(mat4 *m, float x, float y, float z){
 
 void mat4_set_translate(mat4*m, vec4 v){
   mat4_set_identity(m);
-  m->m03 = v.x;
-  m->m13 = v.y;
-  m->m23 = v.z;
+  m->m30 = v.x;
+  m->m31 = v.y;
+  m->m32 = v.z;
 }
 
 void mat4_set_rotation(mat4 *m, vec4 v){

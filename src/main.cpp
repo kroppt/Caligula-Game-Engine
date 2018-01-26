@@ -70,7 +70,7 @@ int main(int argc, char** argv){
     Entity *torus = new Entity("resources/dragon.ply", "out.png");
     GLint modelToWorldLocation  = glGetUniformLocation(shaderProgram.getProgramID(), "modelToWorld" );
     GLint worldToCameraLocation = glGetUniformLocation(shaderProgram.getProgramID(), "worldToCamera");
-    glUniformMatrix4fv(worldToCameraLocation, 1, false, (float*)&worldToCamera.m);
+    glUniformMatrix4fv(worldToCameraLocation, 1, true, (float*)&worldToCamera.m);
     SDL_Event event;
     bool running = true;
     loadSound("test", "audio/sh.mpcm");
@@ -85,8 +85,16 @@ int main(int argc, char** argv){
                         case SDLK_ESCAPE: running = false; break;
                         case SDLK_LEFT: torus->rotation_.y += 0.01f; break;
                         case SDLK_RIGHT: torus->rotation_.y -= 0.01f; break;
+                        case SDLK_SLASH: torus->rotation_.x += 0.01f; break;
+                        case SDLK_PERIOD: torus->rotation_.x -= 0.01f; break;
                         case SDLK_UP: torus->rotation_.z += 0.01f; break;
                         case SDLK_DOWN: torus->rotation_.z -= 0.01f; break;
+                        case SDLK_w: torus->position_.x += 0.1f; break;
+                        case SDLK_s: torus->position_.x -= 0.1f; break;
+                        case SDLK_a: torus->position_.y += 0.1f; break;
+                        case SDLK_d: torus->position_.y -= 0.1f; break;
+                        case SDLK_q: torus->position_.z += 0.1f; break;
+                        case SDLK_e: torus->position_.z -= 0.1f; break;
                         default: playSnd("test", 1,1,1,1,1); break;
                     }
                     break;

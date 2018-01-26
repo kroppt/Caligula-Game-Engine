@@ -43,6 +43,7 @@ GLuint createShader(GLenum shaderType, const char *filename){
         std::ostringstream oss;
         oss << "Error in compiling \"" << filename << "\"\n";
         oss << source << std::endl;
+        fprintf(stderr, "Shader: %s", source);
         throw std::invalid_argument(oss.str());
     }
     return shader;
