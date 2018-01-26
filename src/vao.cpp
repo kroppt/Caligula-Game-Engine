@@ -1,3 +1,4 @@
+#include "random.hpp"
 #include "vao.h"
 #include "glad/glad.h"
 #include <stdio.h>
@@ -78,8 +79,8 @@ void VAO::render(){
     // setup vertex array object
     glBindVertexArray(vao_);
     glEnableVertexAttribArray(0);
-    //glEnableVertexAttribArray(1);
-    //glEnableVertexAttribArray(2);
+    glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(2);
 
     // submit the draw call to the GPU
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_);
@@ -87,8 +88,8 @@ void VAO::render(){
 
     // cleanup
     glDisableVertexAttribArray(0);
-    //glDisableVertexAttribArray(1);
-    //glDisableVertexAttribArray(2);
+    glDisableVertexAttribArray(1);
+    glDisableVertexAttribArray(2);
     glBindVertexArray(0);
 }
 
@@ -137,9 +138,18 @@ VAO* loadVAOfromPLY(const char *modelFilename){
         }
         #ifndef NO_SUPER_MEGA_HACK
         else if(matches == 3){
+            double r = getRandomNormal() / 10.0;
+            double g = getRandomNormal() / 8.0;
+            double b = getRandomNormal() / 3.0;
             vertices.push_back(x);
             vertices.push_back(y);
             vertices.push_back(z);
+            vertices.push_back(r);
+            vertices.push_back(g);
+            vertices.push_back(b);
+            vertices.push_back(1);
+            vertices.push_back(0);
+            vertices.push_back(0);
             n3++;
         }else{
             failed++;
@@ -154,5 +164,5 @@ VAO* loadVAOfromPLY(const char *modelFilename){
     #endif
     std::cout << "\"" << modelFilename << "\" loaded successfully!" << std::endl;
     
-    return new VAO(vertices.data(), indices.data(), vertices.size()/3, indices.size(), true);
+    return new VAO(vertices.data(), indices.data(), vertices.size()/9, indices.size());
 }

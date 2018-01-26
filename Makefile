@@ -4,7 +4,7 @@ CFLAGS=$(FLAGS) -std=gnu11
 LDLIBS=-lcairo -lharfbuzz -lfreetype -ldrm -lSDL2 -lSDL2_image -lGL -lm -ldl -lpng
 LDFLAGS=-O4 -flto -g
 
-OBJECTS=src/main.o src/vao.o src/entity.o src/shader_program.o audio/AudioInterface.o src/glad.o src/texture.o src/textrender.o src/linalg.o src/io.o
+OBJECTS=src/main.o src/vao.o src/entity.o src/shader_program.o audio/AudioInterface.o src/glad.o src/texture.o src/textrender.o src/linalg.o src/io.o src/random.o
 .PHONY: git clean push pull commit
 all: caligula
 caligula: $(OBJECTS)

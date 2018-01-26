@@ -66,6 +66,7 @@ int main(int argc, char** argv){
     ShaderProgram shaderProgram(shaderList);
     shaderProgram.bind();
     mat4 worldToCamera; mat4_set_identity(&worldToCamera);
+    worldToCamera = mat4_perspective(1.3962634015954636, res_y  / res_x , 0.01f, 100.0f);
     Entity *torus = new Entity("resources/dragon.ply", "out.png");
     GLint modelToWorldLocation  = glGetUniformLocation(shaderProgram.getProgramID(), "modelToWorld" );
     GLint worldToCameraLocation = glGetUniformLocation(shaderProgram.getProgramID(), "worldToCamera");
