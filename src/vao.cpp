@@ -103,8 +103,8 @@ VAO* loadVAOfromPLY(const char *modelFilename){
             vertices.push_back(1);
             vertices.push_back(1);
             vertices.push_back(1);
-            vertices.push_back(s);
-            vertices.push_back(t);
+            vertices.push_back(0);
+            vertices.push_back(0);
             vertices.push_back(nx);
             vertices.push_back(ny);
             vertices.push_back(nz);

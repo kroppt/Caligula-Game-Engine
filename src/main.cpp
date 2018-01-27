@@ -70,12 +70,12 @@ int main(int argc, char** argv){
     shaderProgram.bind();
 
     Camera *camera = new Camera(glm::vec3(0.0f,0.0f,2.0f), glm::vec3(0.0f,0.0f,0.0f));
-    Entity *dragon = new Entity("resources/dragon.ply", "out.png");
+    Entity *dragon = new Entity("resources/dragonFromObj.ply", "out.png");
 
-    VAO *cubeVAO = loadVAOfromPLY("resources/cube.ply");
-    Entity *FPSCube = new Entity(cubeVAO, textTexture);
-    FPSCube->position = dragon->position;
-    FPSCube->position.x -= 0.5;
+    // VAO *cubeVAO = loadVAOfromPLY("resources/cube.ply");
+    // Entity *FPSCube = new Entity(cubeVAO, textTexture);
+    // FPSCube->position = dragon->position;
+    // FPSCube->position.x -= 0.5;
 
     glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)res_x / (float)res_y, 0.1f, 10.0f);
     glm::mat4 view = camera->getViewMatrix();
@@ -122,7 +122,7 @@ int main(int argc, char** argv){
         }
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         dragon->render(0, modelLocation);
-        FPSCube->render(0, modelLocation);
+        // FPSCube->render(0, modelLocation);
         SDL_GL_SwapWindow(win);
         SDL_Delay(1);
     }

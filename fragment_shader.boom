@@ -18,9 +18,8 @@ void main(){
 	// You probably want to put them as uniforms
 	vec4 LightColor = vec4(1,1,1,1);
 	float LightPower = 50.0f;
-    vec3 LightPosition_worldspace = vec3(2,0,0);
-	
-	// Material properties
+    vec3 LightPosition_worldspace = vec3(3,3,3);
+
 	vec4 MaterialDiffuseColor = texture(frag_tex, tex_coord) * v_color;
 	vec4 MaterialAmbientColor = vec4(0.1,0.1,0.1,1.0) * MaterialDiffuseColor;
 	vec4 MaterialSpecularColor = vec4(0.3,0.3,0.3,1.0);
