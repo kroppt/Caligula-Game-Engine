@@ -69,7 +69,7 @@ int main(int argc, char** argv){
     ShaderProgram shaderProgram(shaderList);
     shaderProgram.bind();
 
-    Camera *camera = new Camera(glm::vec3(2.0f,2.0f,2.0f), glm::vec3(0.1f,0.1f,0.1f));
+    Camera *camera = new Camera(glm::vec3(0.0f,0.0f,2.0f), glm::vec3(0.0f,0.0f,0.0f));
     Entity *dragon = new Entity("resources/dragon.ply", "out.png");
 
     glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)res_x / (float)res_y, 0.1f, 100.0f);
@@ -95,19 +95,19 @@ int main(int argc, char** argv){
                 case SDL_KEYDOWN:
                     switch(event.key.keysym.sym){
                         case SDLK_ESCAPE: running = false; break;
-                        case SDLK_LEFT: dragon->rotation_.y += 0.01f; break;
-                        case SDLK_RIGHT: dragon->rotation_.y -= 0.01f; break;
-                        case SDLK_SLASH: dragon->rotation_.x += 0.01f; break;
-                        case SDLK_PERIOD: dragon->rotation_.x -= 0.01f; break;
-                        case SDLK_UP: dragon->rotation_.z += 0.01f; break;
-                        case SDLK_DOWN: dragon->rotation_.z -= 0.01f; break;
-			            case SDLK_l: std::cout << "dragon at (" << dragon->position_.x << ", " << dragon->position_.y << ", " << dragon->position_.z << ")" << std::endl; break;
-                        case SDLK_w: dragon->position_.x += 0.1f; break;
-                        case SDLK_s: dragon->position_.x -= 0.1f; break;
-                        case SDLK_a: dragon->position_.y += 0.1f; break;
-                        case SDLK_d: dragon->position_.y -= 0.1f; break;
-                        case SDLK_q: dragon->position_.z += 0.1f; break;
-                        case SDLK_e: dragon->position_.z -= 0.1f; break;
+                        case SDLK_LEFT: dragon->yaw += 0.01f; break;
+                        case SDLK_RIGHT: dragon->yaw -= 0.01f; break;
+                        case SDLK_SLASH: dragon->roll += 0.01f; break;
+                        case SDLK_PERIOD: dragon->roll -= 0.01f; break;
+                        case SDLK_UP: dragon->pitch += 0.01f; break;
+                        case SDLK_DOWN: dragon->pitch -= 0.01f; break;
+			            case SDLK_l: std::cout << "dragon at (" << dragon->position.x << ", " << dragon->position.y << ", " << dragon->position.z << ")" << std::endl; break;
+                        case SDLK_w: dragon->position.x += 0.1f; break;
+                        case SDLK_s: dragon->position.x -= 0.1f; break;
+                        case SDLK_a: dragon->position.y += 0.1f; break;
+                        case SDLK_d: dragon->position.y -= 0.1f; break;
+                        case SDLK_q: dragon->position.z += 0.1f; break;
+                        case SDLK_e: dragon->position.z -= 0.1f; break;
                         default: playSnd("test", 1,1,1,1,1); break;
                     }
                     break;
@@ -156,7 +156,7 @@ void setup(){
     glClearColor(1.0f, 0.5f, 0.0f, 1.0f);
     glEnable(GL_MULTISAMPLE);
     // face culling
-    glEnable(GL_CULL_FACE);
+    glDisable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     glFrontFace(GL_CW);
     // depth test

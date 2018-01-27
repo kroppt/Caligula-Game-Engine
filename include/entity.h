@@ -2,7 +2,8 @@
 #define ENTITY_H
 #include "vao.h"
 #include "texture.h"
-#include "nus/linalg.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 class Entity{
     public:
@@ -13,17 +14,10 @@ class Entity{
          * an obvious memory leak to go along with it.
          **/ 
         Entity(const char *modelFilename, const char *textureFilename);
-        vec4 getPosition() { return position_; }
-        vec4 getVelocity() { return velocity_; }
-        vec4 getRotation() { return rotation_; } 
-        vec4 getAngularVelocity() { return angularVelocity_; }
-        void setPosition(vec4 position) { position_ = position; }
-        void setVelocity(vec4 velocity) { velocity_ = velocity; }
-        void setRotation(vec4 rotation) { rotation_ = rotation; }
-        void setAngularVelocity(vec4 angularVelocity) { angularVelocity_ = angularVelocity; }
         void render(float alpha, uint uniformLocation);
 
-        vec4 position_, velocity_, rotation_, angularVelocity_;
+        glm::vec3 position, velocity;
+        float yaw, pitch, roll;
     private:
         VAO *vao_;
         Texture *texture_;
