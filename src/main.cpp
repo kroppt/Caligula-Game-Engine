@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <SDL2/SDL.h>
-#include "nus/linalg.h"
+//#include "nus/linalg.h"
 #include "glad/glad.h"
 #include <SDL2/SDL_opengl.h>
 #include "audio/AudioInterface.h"
@@ -13,6 +13,9 @@
 #include <SDL_image.h>
 #include "texture.h"
 #include "entity.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include "camera.hpp"
 
 void init(void);
 void setup(void);
@@ -20,8 +23,8 @@ void setup(void);
 int main(int argc, char** argv){
     init();
 
-    int res_x = 1920;
-    int res_y = 1080;
+    int res_x = 720;
+    int res_y = 480;
     SDL_Window *win = SDL_CreateWindow(
         "Test Window",
         SDL_WINDOWPOS_CENTERED,
@@ -65,12 +68,21 @@ int main(int argc, char** argv){
 
     ShaderProgram shaderProgram(shaderList);
     shaderProgram.bind();
-    mat4 worldToCamera; mat4_set_identity(&worldToCamera);
-    worldToCamera = mat4_perspective(1.3962634015954636, res_y  / res_x , 0.01f, 100.0f);
-    Entity *torus = new Entity("resources/dragon.ply", "out.png");
-    GLint modelToWorldLocation  = glGetUniformLocation(shaderProgram.getProgramID(), "modelToWorld" );
-    GLint worldToCameraLocation = glGetUniformLocation(shaderProgram.getProgramID(), "worldToCamera");
-    glUniformMatrix4fv(worldToCameraLocation, 1, true, (float*)&worldToCamera.m);
+
+    Camera *camera = new Camera(glm::vec3(2.0f,2.0f,2.0f), glm::vec3(0.1f,0.1f,0.1f));
+    Entity *dragon = new Entity("resources/dragon.ply", "out.png");
+
+    glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)res_x / (float)res_y, 0.1f, 100.0f);
+    glm::mat4 view = camera->getViewMatrix();
+    glm::mat4 vp = projection * view;
+
+    GLint modelLocation  = glGetUniformLocation(shaderProgram.getProgramID(), "model" );
+    GLint vpLocation = glGetUniformLocation(shaderProgram.getProgramID(), "vp");
+
+    glUniformMatrix4fv(vpLocation, 1, true, &vp[0][0]);
+
+
+
     SDL_Event event;
     bool running = true;
     loadSound("test", "audio/sh.mpcm");
@@ -83,25 +95,26 @@ int main(int argc, char** argv){
                 case SDL_KEYDOWN:
                     switch(event.key.keysym.sym){
                         case SDLK_ESCAPE: running = false; break;
-                        case SDLK_LEFT: torus->rotation_.y += 0.01f; break;
-                        case SDLK_RIGHT: torus->rotation_.y -= 0.01f; break;
-                        case SDLK_SLASH: torus->rotation_.x += 0.01f; break;
-                        case SDLK_PERIOD: torus->rotation_.x -= 0.01f; break;
-                        case SDLK_UP: torus->rotation_.z += 0.01f; break;
-                        case SDLK_DOWN: torus->rotation_.z -= 0.01f; break;
-                        case SDLK_w: torus->position_.x += 0.1f; break;
-                        case SDLK_s: torus->position_.x -= 0.1f; break;
-                        case SDLK_a: torus->position_.y += 0.1f; break;
-                        case SDLK_d: torus->position_.y -= 0.1f; break;
-                        case SDLK_q: torus->position_.z += 0.1f; break;
-                        case SDLK_e: torus->position_.z -= 0.1f; break;
+                        case SDLK_LEFT: dragon->rotation_.y += 0.01f; break;
+                        case SDLK_RIGHT: dragon->rotation_.y -= 0.01f; break;
+                        case SDLK_SLASH: dragon->rotation_.x += 0.01f; break;
+                        case SDLK_PERIOD: dragon->rotation_.x -= 0.01f; break;
+                        case SDLK_UP: dragon->rotation_.z += 0.01f; break;
+                        case SDLK_DOWN: dragon->rotation_.z -= 0.01f; break;
+			            case SDLK_l: std::cout << "dragon at (" << dragon->position_.x << ", " << dragon->position_.y << ", " << dragon->position_.z << ")" << std::endl; break;
+                        case SDLK_w: dragon->position_.x += 0.1f; break;
+                        case SDLK_s: dragon->position_.x -= 0.1f; break;
+                        case SDLK_a: dragon->position_.y += 0.1f; break;
+                        case SDLK_d: dragon->position_.y -= 0.1f; break;
+                        case SDLK_q: dragon->position_.z += 0.1f; break;
+                        case SDLK_e: dragon->position_.z -= 0.1f; break;
                         default: playSnd("test", 1,1,1,1,1); break;
                     }
                     break;
             }
         }
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        torus->render(0, modelToWorldLocation);
+        dragon->render(0, modelLocation);
         SDL_GL_SwapWindow(win);
         SDL_Delay(1);
     }
@@ -143,7 +156,7 @@ void setup(){
     glClearColor(1.0f, 0.5f, 0.0f, 1.0f);
     glEnable(GL_MULTISAMPLE);
     // face culling
-    // glEnable(GL_CULL_FACE);
+    glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     glFrontFace(GL_CW);
     // depth test
