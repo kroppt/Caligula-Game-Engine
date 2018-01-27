@@ -31,6 +31,10 @@ ShaderProgram::ShaderProgram(std::vector<GLuint> shaderList){
 GLuint createShader(GLenum shaderType, const char *filename){
     GLuint shader = glCreateShader(shaderType);
     char *source = load_file(filename);
+    if(!source ) {
+        fprintf(stderr, "Failed to Load file %s\n", filename);
+        exit(1);
+    }
     glShaderSource(shader, 1, &source, NULL);
     glCompileShader(shader);
     free(source);
