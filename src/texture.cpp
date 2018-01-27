@@ -2,8 +2,9 @@
 #include <SDL_image.h>
 #include "glad/glad.h"
 
-Texture::Texture(const char *filename, GLenum target){
-    SDL_Surface *surface = IMG_Load(filename);
+Texture::Texture(const char *filename, GLenum target) : Texture(IMG_Load(filename)) {}
+
+Texture::Texture(SDL_Surface *surface, GLenum target) {
     width_ = surface->w;
     height_ = surface->h;
     pixels_ = surface->pixels;
@@ -11,9 +12,9 @@ Texture::Texture(const char *filename, GLenum target){
     glGenTextures(1, &texID_);
     glBindTexture(target, texID_);
 
-    if(surface->format->BytesPerPixel == 4){
+    if (surface->format->BytesPerPixel == 4) {
         format_ = GL_RGBA;
-    }else{
+    } else {
         format_ = GL_RGB;
     }
 
@@ -23,10 +24,10 @@ Texture::Texture(const char *filename, GLenum target){
     glGenerateMipmap(target);
 }
 
-void Texture::bind(GLenum target){
+void Texture::bind(GLenum target) {
     glBindTexture(target, texID_);
 }
 
-void Texture::unbind(GLenum target){
+void Texture::unbind(GLenum target) {
     glBindTexture(target, 0);
 }
