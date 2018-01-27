@@ -6,7 +6,6 @@
 class VAO{
     public:
         VAO(float *vertices, unsigned *indices, size_t nVertices, size_t nIndices);
-        VAO(float *vertices, unsigned *indices, size_t nVertices, size_t nIndices, bool SUPERMEGA);
         ~VAO();
         void render(void);
     private:

@@ -57,8 +57,8 @@ int main(int argc, char** argv){
     text_render.ChangeFontBackgroundRGBA(0., 1., 1., 1);
     text_render.WriteText("This is a... test!");
 
-    const char *vertexShaderFilename = "vertex_shader.vsh";
-    const char *fragmentShaderFilename = "fragment_shader.fsh";
+    const char *vertexShaderFilename = "vertex_shader.zap";
+    const char *fragmentShaderFilename = "fragment_shader.boom";
     GLuint vertexShader = createShader(GL_VERTEX_SHADER, vertexShaderFilename);
     GLuint fragmentShader = createShader(GL_FRAGMENT_SHADER, fragmentShaderFilename);
     
@@ -77,9 +77,13 @@ int main(int argc, char** argv){
     glm::mat4 vp = projection * view;
 
     GLint modelLocation  = glGetUniformLocation(shaderProgram.getProgramID(), "model" );
+    GLint viewLocation  = glGetUniformLocation(shaderProgram.getProgramID(), "view" );
+    GLint projectionLocation  = glGetUniformLocation(shaderProgram.getProgramID(), "projection" );
     GLint vpLocation = glGetUniformLocation(shaderProgram.getProgramID(), "vp");
 
     glUniformMatrix4fv(vpLocation, 1, true, &vp[0][0]);
+    glUniformMatrix4fv(viewLocation, 1, true, &view[0][0]);
+    glUniformMatrix4fv(projectionLocation, 1, true, &projection[0][0]);
 
 
 
