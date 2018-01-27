@@ -75,7 +75,8 @@ int main(int argc, char** argv){
     // VAO *cubeVAO = loadVAOfromPLY("resources/cube.ply");
     // Entity *FPSCube = new Entity(cubeVAO, textTexture);
     // FPSCube->position = dragon->position;
-    // FPSCube->position.x -= 0.5;
+    // FPSCube->position.x -= 0.04;
+    // FPSCube->scale = 0.03;
 
     glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)res_x / (float)res_y, 0.1f, 10.0f);
     glm::mat4 view = camera->getViewMatrix();

@@ -27,7 +27,7 @@ void Entity::render(float alpha, uint uniformLocation){
     translation_matrix = glm::translate(translation_matrix, position);
     rotation_matrix = glm::yawPitchRoll(yaw, pitch, roll);
     scale_matrix = glm::scale(scale_matrix, glm::vec3(scale, scale,scale));
-    result_matrix = translation_matrix * rotation_matrix * scale;
+    result_matrix = translation_matrix * rotation_matrix * scale_matrix;
     glUniformMatrix4fv(uniformLocation, 1, false, &result_matrix[0][0]);
 
     texture_->bind();
