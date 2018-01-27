@@ -6,6 +6,7 @@
 class Texture{
     public:
         Texture(const char *filename, GLenum target = GL_TEXTURE_2D);
+        Texture(SDL_Surface *surface, GLenum target = GL_TEXTURE_2D);
         GLuint getTexID() { return texID_; }
         int getWidth() { return width_; }
         int getHeight() { return height_; }
