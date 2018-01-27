@@ -1,5 +1,5 @@
 #define _NUS_RAND_IMPL_C 1
-#include "../include/random.hpp"
+#include "random.hpp"
 #include <random>
 
 

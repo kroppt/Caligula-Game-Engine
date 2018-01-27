@@ -1,5 +1,5 @@
 #include "random.hpp"
-#include "vao.h"
+#include "vao.hpp"
 #include "glad/glad.h"
 #include <stdio.h>
 #include <iostream>

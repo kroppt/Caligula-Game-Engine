@@ -1,7 +1,7 @@
 #ifndef ENTITY_H
 #define ENTITY_H
-#include "vao.h"
-#include "texture.h"
+#include "vao.hpp"
+#include "texture.hpp"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 

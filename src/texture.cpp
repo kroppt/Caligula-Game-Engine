@@ -1,4 +1,4 @@
-#include "texture.h"
+#include "texture.hpp"
 #include <SDL_image.h>
 #include "glad/glad.h"
 

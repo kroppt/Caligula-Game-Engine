@@ -1,5 +1,5 @@
 #include "nus/io.h"
-#include "shader_program.h"
+#include "shader_program.hpp"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdexcept>
