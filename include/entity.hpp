@@ -17,7 +17,7 @@ class Entity{
         void render(float alpha, uint uniformLocation);
 
         glm::vec3 position, velocity;
-        float yaw, pitch, roll;
+        float yaw, pitch, roll, scale;
     private:
         VAO *vao_;
         Texture *texture_;
