@@ -55,7 +55,7 @@ int main(int argc, char** argv){
     text_render.ChangeFontSize(FONTSIZE_LARGE);
     text_render.ChangeFontRGBA(1., 0., 1., 1);
     text_render.ChangeFontBackgroundRGBA(0., 1., 1., 1);
-    text_render.WriteText("This is a... test!");
+    Texture *textTexture = text_render.WriteText("This is a... texture test!");
 
     const char *vertexShaderFilename = "vertex_shader.vsh";
     const char *fragmentShaderFilename = "fragment_shader.fsh";
@@ -71,7 +71,12 @@ int main(int argc, char** argv){
 
     Camera *camera = new Camera(glm::vec3(0.0f,0.0f,2.0f), glm::vec3(0.0f,0.0f,0.0f));
     Entity *dragon = new Entity("resources/dragon.ply", "out.png");
-    
+
+    VAO *cubeVAO = loadVAOfromPLY("resources/cube.ply");
+    Entity *FPSCube = new Entity(cubeVAO, textTexture);
+    FPSCube->position = dragon->position;
+    FPSCube->position.x -= 0.5;
+
     glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)res_x / (float)res_y, 0.1f, 10.0f);
     glm::mat4 view = camera->getViewMatrix();
     glm::mat4 vp = projection * view;
@@ -80,8 +85,6 @@ int main(int argc, char** argv){
     GLint vpLocation = glGetUniformLocation(shaderProgram.getProgramID(), "vp");
 
     glUniformMatrix4fv(vpLocation, 1, true, &vp[0][0]);
-
-
 
     SDL_Event event;
     bool running = true;
@@ -115,6 +118,7 @@ int main(int argc, char** argv){
         }
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         dragon->render(0, modelLocation);
+        FPSCube->render(0, modelLocation);
         SDL_GL_SwapWindow(win);
         SDL_Delay(1);
     }
