@@ -53,7 +53,10 @@ did you configure your compiler correctly?"
 // loads a file into memory -- returns NULL on error
 char *load_file(const char *filename){
   FILE *file = fopen(filename, "rb");
-  if(!file) return NULL;
+  if(!file) {
+    perror("[nus io.c] Load file failed");
+    return NULL;
+  }
   size_t size = open_file_size(file);
   if(size == 0) return NULL;
   char *buffer = calloc(size, 1);
