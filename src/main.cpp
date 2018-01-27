@@ -23,8 +23,8 @@ void setup(void);
 int main(int argc, char** argv){
     init();
 
-    int res_x = 720;
-    int res_y = 480;
+    int res_x = 1800;
+    int res_y = 1000;
     SDL_Window *win = SDL_CreateWindow(
         "Test Window",
         SDL_WINDOWPOS_CENTERED,
@@ -71,8 +71,8 @@ int main(int argc, char** argv){
 
     Camera *camera = new Camera(glm::vec3(0.0f,0.0f,2.0f), glm::vec3(0.0f,0.0f,0.0f));
     Entity *dragon = new Entity("resources/dragon.ply", "out.png");
-
-    glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)res_x / (float)res_y, 0.1f, 100.0f);
+    
+    glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)res_x / (float)res_y, 0.1f, 10.0f);
     glm::mat4 view = camera->getViewMatrix();
     glm::mat4 vp = projection * view;
 
@@ -162,7 +162,8 @@ void setup(){
     // depth test
     glEnable(GL_DEPTH_TEST);
     glDepthMask(true);
-    glDepthFunc(GL_LESS);
+    glClearDepth(0);
+    glDepthFunc(GL_GREATER);
     glDepthRange(0.01f, 1.0f);
     glEnable(GL_DEPTH_CLAMP);
     // alpha blending
