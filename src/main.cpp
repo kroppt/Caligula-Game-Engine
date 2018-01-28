@@ -25,8 +25,8 @@ void setup(void);
 int main(int argc, char** argv){
     init();
 
-    int res_x = 720;
-    int res_y = 480;
+    int res_x = 1800;
+    int res_y = 900;
     SDL_Window *win = SDL_CreateWindow(
         "Test Window",
         SDL_WINDOWPOS_CENTERED,
@@ -53,12 +53,11 @@ int main(int argc, char** argv){
     }
 
     setup();
-    TextRender text_render = TextRender();
+    /*TextRender text_render = TextRender();
     text_render.ChangeFontSize(FONTSIZE_LARGE);
     text_render.ChangeFontRGBA(1., 0., 1., 1);
     text_render.ChangeFontBackgroundRGBA(0., 1., 1., 1);
-    Texture *textTexture = text_render.WriteText("This is a... texture test!");
-    Texture *backTexture = new Texture("resources/graphWithSun.png"); //Screenshot from 2018-01-21 22-30-09.png");
+    Texture *textTexture = text_render.WriteText("This is a... texture test!");*/
 
     ShaderProgram shaderProgram("vertex_shader.zap", "fragment_shader.boom");
     ShaderProgram orthoShader("resources/ortho.vsh", "resources/ortho.fsh");
@@ -84,6 +83,7 @@ int main(int argc, char** argv){
     uint indices[] = { 0, 1, 2, 2, 3, 0};
 
     Model *square = new Model(&modelC[0], &indices[0], COUNT_OF(modelC), COUNT_OF(indices));
+    Texture *backTexture = new Texture("resources/graphWithSun.png"); //Screenshot from 2018-01-21 22-30-09.png");
     Entity *FPSCube = new Entity(square, backTexture);
     FPSCube->position = glm::vec3(0,0,0);
     FPSCube->scale = 800.0f;
@@ -147,6 +147,7 @@ int main(int argc, char** argv){
                     break;
             }
         }
+        #if 1
         ///////////////////////////3d rendering
         // bind the shader
         shaderProgram.bind();
@@ -161,7 +162,7 @@ int main(int argc, char** argv){
         dragon->render(0, modelLocation);
         glUniform1i(ldLocation, 1);
         lightbox->render(0, modelLocation);
-
+        #endif
         ////////////////////////////////////// orthographic HUD rendering
         glDisable(GL_DEPTH_TEST);
         orthoShader.bind();
@@ -170,7 +171,7 @@ int main(int argc, char** argv){
         glEnable(GL_DEPTH_TEST);
         // update the window
         SDL_GL_SwapWindow(win);
-        SDL_Delay(1);
+        SDL_Delay(10);
     }
 
     shaderProgram.unbind();
