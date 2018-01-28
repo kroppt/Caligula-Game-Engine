@@ -1,3 +1,5 @@
+#ifndef TEXTRENDER_HPP
+#define TEXTRENDER_HPP 1
 #include <harfbuzz/hb-ft.h>
 #include <string>
 #include <texture.hpp>
@@ -29,3 +31,4 @@ class TextRender {
         FT_Face ft_face;
         FT_Library ft_library;
 };
+#endif

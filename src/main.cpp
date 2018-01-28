@@ -17,6 +17,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "camera.hpp"
 #include "resource_manager.hpp"
+#include "fps_counter.hpp"
 
 #define COUNT_OF(x) (sizeof(x)/sizeof(x[0]))
 
@@ -46,7 +47,7 @@ int main(int argc, char** argv){
         printf("SDL_GL_CreateContext failed %s\n", SDL_GetError());
     }
     SDL_GL_MakeCurrent(win, context);
-    SDL_GL_SetSwapInterval(0);
+    SDL_GL_SetSwapInterval(1);
     if (!gladLoadGL()) {
         std::cout << "gladLoadGL error" << std::endl;
         SDL_Quit();
@@ -55,11 +56,11 @@ int main(int argc, char** argv){
 
     setup();
     
-    TextRender text_render = TextRender();
-    text_render.ChangeFontSize(FONTSIZE_LARGE);
-    text_render.ChangeFontRGBA(1., 0., 1., 1);
-    text_render.ChangeFontBackgroundRGBA(0., 0., .3, 1);
-    Texture *textTexture = text_render.WriteText("This is a... texture test!");
+    TextRender *text_render = new  TextRender();
+    text_render->ChangeFontSize(FONTSIZE_LARGE);
+    text_render->ChangeFontRGBA(1., 0., 1., 1);
+    text_render->ChangeFontBackgroundRGBA(0., 0., .3, 1);
+    Texture *textTexture = text_render->WriteText("This is a... texture test!");
 
     ShaderProgram shaderProgram("vertex_shader.zap", "fragment_shader.boom");
     ShaderProgram orthoShader("resources/ortho.vsh", "resources/ortho.fsh");
@@ -81,47 +82,41 @@ int main(int argc, char** argv){
     ResourceManager *rm = new ResourceManager();
 
     Texture *backTexture = rm->loadTexture("resources/bad_texture.png");
+    Texture *whiteTexture = rm->loadTexture("resources/white_square.png");
+    Texture *dragonTexture = rm->loadTexture("resources/grass.png");
 
-    Entity *dragon = new Entity("resources/dragonFromObj.ply", "out.png", ldLocation);
+    Model *cubeM1 = rm->loadModel("resources/cube.ply");
+    Model *cubeModel = rm->loadModel("resources/cubeTexture.ply");
+    Model *dragonModel = rm->loadModel("resources/dragonFromObj.ply");
+
+
+    //make the dragon
+    Entity *dragon = new Entity(dragonModel, dragonTexture, ldLocation);
     dragon->position = glm::vec3(0.0f, -4.2f, -6.8f);
-    Entity *lightbox = new Entity("resources/cube.ply", "resources/white_square.png", ldLocation);
+    
+    // make the lightbox
+    Entity *lightbox = new Entity(cubeM1, whiteTexture, ldLocation);
     lightbox->position = glm::vec3(3,3,3);
     lightbox->scale = 0.05f;
     lightbox->disableLighting = true;
-
-
-    Model *cubeModel = loadModelfromPLY("resources/cubeTexture.ply");
+    
+    // make the background cube
     Entity *cubeEnt = new Entity(cubeModel, backTexture, ldLocation);
     cubeEnt->disableLighting = true;
     cubeEnt->scale = 20.0;
-    float modelC[] = {
-        //12-D vertices (x,y,z,r,g,b,a,s,t,nx,ny,nz)
-        0,0,0 , 1,1,1,1 , 0,0 , 0, 0, 0,
-        0,72,0 , 1,1,1,1 , 0,1 , 0, 0, 0,
-        338,72,0 , 1,1,1,1 , 1,1 , 0, 0, 0,
-        338,0,0 , 1,1,1,1 , 1,0 , 0, 0, 0,
-    };
 
-    uint indices[] = { 0, 1, 2, 2, 3, 0};
-
-    Model *square = new Model(&modelC[0], &indices[0], COUNT_OF(modelC), COUNT_OF(indices));
-    Entity *FPSCube = new Entity(square, backTexture, ldLocation);
-    FPSCube->position = glm::vec3(0,0,0);
-    FPSCube->scale = 1.0f;
-    FPSCube->disableLighting = true;
-
+    // upload the uniforms
     camera->UploadUniforms(shaderProgram.getProgramID());
     glUniform1i(ldLocation, 0);
 
+    // create the fps counter
+    FPSCounter *counter = new FPSCounter(text_render);
+
+    // run the main loop
     SDL_Event event;
     bool running = true;
     loadSound("test", "audio/sh.mpcm");
-    uint fps_counter = 0, fps = 0;
-    uint now = time(NULL);
-    Texture *fps_texture = text_render.WriteText("FPS: PLACEHOLDER");
-    if(SDL_CaptureMouse(SDL_TRUE)){
-        printf("SDL ERROR %s\n", SDL_GetError());
-    }
+
     SDL_SetRelativeMouseMode(SDL_TRUE);
     while(running){
         while(SDL_PollEvent(&event)){
@@ -145,8 +140,8 @@ int main(int argc, char** argv){
                         case SDLK_j: dragon->position.x -= 0.1f; break;
                         case SDLK_u: dragon->position.z += 0.1f; break;
                         case SDLK_o: dragon->position.z -= 0.1f; break;
-                        case SDLK_n: SDL_SetWindowGrab(win, SDL_FALSE);break;
-                        case SDLK_c: SDL_SetWindowGrab(win, SDL_TRUE); break;
+                        case SDLK_n: SDL_SetRelativeMouseMode(SDL_FALSE);break;
+                        case SDLK_c: SDL_SetRelativeMouseMode(SDL_TRUE );break;
                         case SDLK_y: playSnd("test", 1,1,1,1,1); break;
                         default: break;
                     }
@@ -175,7 +170,6 @@ int main(int argc, char** argv){
         if(keystates[SDL_SCANCODE_SPACE]){
             camera->Move(0, 0, 0.05);
         }
-        #if 1
         ///////////////////////////3d rendering
         // bind the shader
         shaderProgram.bind();
@@ -187,26 +181,18 @@ int main(int argc, char** argv){
         dragon->render(0, modelLocation);
         cubeEnt->render(0, modelLocation);
         lightbox->render(0, modelLocation);
-        #endif
+        // update fps
+        counter->frame();
         ////////////////////////////////////// orthographic HUD rendering
-        fps_counter++;
-        if(time(NULL) - now > 0){
-            fps = fps_counter;
-            fps_counter = 0;
-            delete fps_texture;
-            //printf("FPS %d\n", fps);
-            fps_texture = text_render.WriteText((std::string("FPS: ") + std::to_string(fps)).c_str());
-            FPSCube->texture_ = fps_texture;
-            now = time(NULL);
-        }
         glDisable(GL_DEPTH_TEST);
         orthoShader.bind();
         glUniform2f(sizeLocation, res_x, res_y);
-        FPSCube->render(0, modelOrthoLocation);
+        counter->drawFps(modelOrthoLocation);
         glEnable(GL_DEPTH_TEST);
+
         // update the window
         SDL_GL_SwapWindow(win);
-        //SDL_Delay(0);
+        SDL_Delay(1);
     }
 
     shaderProgram.unbind();

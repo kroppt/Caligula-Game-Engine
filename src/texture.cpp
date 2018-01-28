@@ -39,24 +39,20 @@ void Texture::init(SDL_Surface * surface, GLenum target, bool flip){
     }
 
     SDL_LockSurface(surface);
-    //SDL_LockSurface(surf);
+    SDL_LockSurface(surf);
     uint8_t *dst = (uint8_t*)surf->pixels;
     uint8_t *src = (uint8_t*)surface->pixels;
-    if(!dst)abort();
-    if(!src)abort();
     const int h = surf->h;
     const size_t rowbytes = surf->pitch;
-    //printf("Rowbytes %lu Width %d Height %d BPP 32\n", rowbytes, surf->w, surf->h);
-    //IMG_SavePNG(surface, "debuga.test.png");
+    // check for overlap
     if(overlap_p((void*)dst, (void*)src, rowbytes * h)){
         fprintf(stderr, "[texture.cpp:35] Destination & Source overlap! %lu %lu \n", rowbytes * h, ((intptr_t)dst)-((intptr_t)src) );
         abort();
     }
+    // copy the pixel data
     for(int row = 0; row < surf->h; row++){
         memcpy(&dst[rowbytes * row], &src[(h - row - 1) * rowbytes], rowbytes);
     }
-    //SDL_UnlockSurface(surface);
-    //SDL_UnlockSurface(surf);
     pixels_ = surf->pixels;
 
     glGenTextures(1, &texID_);

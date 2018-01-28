@@ -16,6 +16,9 @@ TextRender::TextRender() {
     this->ChangeFontSize(FONTSIZE_DEFAULT);
     this->ChangeFontRGBA(0., 0., 0., 1.);
     this->ChangeFontBackgroundRGBA(1., 1., 1., 0.);
+    if (FT_Init_FreeType(&ft_library)) {
+        abort();
+    }
 }
 
 TextRender::~TextRender() {
@@ -46,15 +49,14 @@ void TextRender::ChangeFontBackgroundRGBA(const double r, const double g, const 
 Texture *TextRender::WriteText(const char *text) {
     int width = this->font_size;
     int height = this->font_size;
-    if (FT_Init_FreeType(&ft_library)) {
-        abort();
-    }
+    
     if (FT_New_Face(this->ft_library, this->font_name.c_str(), 0, &this->ft_face)) {
         abort();
     }
     if (FT_Set_Char_Size(this->ft_face, font_size*64, font_size*64, 0, 0)) {
         abort();
     }
+    
     this->curr_font = hb_ft_font_create(this->ft_face, NULL);
     hb_font_t *hb_font = this->curr_font;
     hb_buffer_t *hb_buffer;
