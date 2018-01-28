@@ -59,7 +59,7 @@ int main(int argc, char** argv){
     orthoShader.bind();
     glUniform2f(sizeLocation, res_x, res_y);
 
-    Camera *camera = new Camera(glm::vec3(0.0f,0.0f,19.0f), glm::vec3(0.0f,0.0f,0.0f), (float)res_x / (float)res_y);
+    Camera *camera = new Camera(glm::vec3(0.0f,0.0f,19.0f), (float)res_x / (float)res_y);
     camera->InitUniforms(shaderProgram.getProgramID());
     camera->theta = -M_PI/2;
     camera->phi = M_PI / 2.0f;

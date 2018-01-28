@@ -59,7 +59,7 @@ char *load_file(const char *filename){
   }
   size_t size = open_file_size(file);
   if(size == 0) return NULL;
-  char *buffer = calloc(size, 1);
+  char *buffer = calloc(size + 1, 1);
   size_t read = fread(buffer, 1, size, file);
   while(read != size && !feof(file)){
     read += fread(&buffer[read], 1, size-read, file);

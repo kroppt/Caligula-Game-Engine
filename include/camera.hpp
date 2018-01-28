@@ -8,7 +8,7 @@ const glm::vec3 UP = glm::vec3(0.0, 1.0, 0.0);
 #define PITCH_LIMIT 0.1f
 class Camera{
 	public:
-		Camera(glm::vec3 position, glm::vec3 lookAt, float aspect);
+		Camera(glm::vec3 position, float aspect);
 		void update(void);
 		glm::mat4 getViewMatrix();
 		void UpdateLook(float dx, float dy);
