@@ -5,7 +5,7 @@
 
 const glm::vec3 UP = glm::vec3(0.0, 1.0, 0.0);
 
-#define PITCH_LIMIT 0.01f
+#define PITCH_LIMIT 0.1f
 class Camera{
 	public:
 		Camera(glm::vec3 position, glm::vec3 lookAt, float aspect);

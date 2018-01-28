@@ -8,19 +8,20 @@
 #define INV_UNIFORM 0xFFFFFFFF
 class Entity{
     public:
-        Entity(Model *model, Texture *texture);
+        Entity(Model *model, Texture *texture, uint ldLocation=INV_UNIFORM);
         /**
          * This constructor is merely for laziness, would not be used in practice as it
          * loads the same model and texture into memory multiple times. As such, there is
          * an obvious memory leak to go along with it.
          **/ 
-        Entity(const char *modelFilename, const char *textureFilename);
+        Entity(const char *modelFilename, const char *textureFilename, uint ldLocation=INV_UNIFORM);
         void render(float alpha, uint uniformLocation);
 
         glm::vec3 position, velocity;
         float yaw, pitch, roll, scale;
         Texture *texture_;
         bool disableLighting;
+        GLuint ldLocation;
     private:
         Model *model_;
 

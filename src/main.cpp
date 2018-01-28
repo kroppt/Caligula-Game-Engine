@@ -64,22 +64,35 @@ int main(int argc, char** argv){
     ShaderProgram shaderProgram("vertex_shader.zap", "fragment_shader.boom");
     ShaderProgram orthoShader("resources/ortho.vsh", "resources/ortho.fsh");
 
+
+    GLint modelLocation  = glGetUniformLocation(shaderProgram.getProgramID(), "model" );
+    GLint modelOrthoLocation  = glGetUniformLocation(orthoShader.getProgramID(), "model" );
+    GLint ldLocation = glGetUniformLocation(shaderProgram.getProgramID(), "lightingDisable");
+
+    GLint sizeLocation = glGetUniformLocation(orthoShader.getProgramID(), "screenSize" );
+    orthoShader.bind();
+    glUniform2f(sizeLocation, res_x, res_y);
+
     Camera *camera = new Camera(glm::vec3(0.0f,0.0f,19.0f), glm::vec3(0.0f,0.0f,0.0f), (float)res_x / (float)res_y);
-    camera->theta = M_PI;
+    camera->InitUniforms(shaderProgram.getProgramID());
+    camera->theta = -M_PI/2;
+    camera->phi = M_PI / 2.0f;
 
     ResourceManager *rm = new ResourceManager();
 
     Texture *backTexture = rm->loadTexture("resources/bad_texture.png");
 
-    Entity *dragon = new Entity("resources/dragonFromObj.ply", "out.png");
+    Entity *dragon = new Entity("resources/dragonFromObj.ply", "out.png", ldLocation);
     dragon->position = glm::vec3(0.0f, -4.2f, -6.8f);
-    Entity *lightbox = new Entity("resources/cube.ply", "resources/white_square.png");
+    Entity *lightbox = new Entity("resources/cube.ply", "resources/white_square.png", ldLocation);
     lightbox->position = glm::vec3(3,3,3);
     lightbox->scale = 0.05f;
+    lightbox->disableLighting = true;
 
 
     Model *cubeModel = loadModelfromPLY("resources/cubeTexture.ply");
-    Entity *cubeEnt = new Entity(cubeModel, backTexture);
+    Entity *cubeEnt = new Entity(cubeModel, backTexture, ldLocation);
+    cubeEnt->disableLighting = true;
     cubeEnt->scale = 20.0;
     float modelC[] = {
         //12-D vertices (x,y,z,r,g,b,a,s,t,nx,ny,nz)
@@ -92,18 +105,10 @@ int main(int argc, char** argv){
     uint indices[] = { 0, 1, 2, 2, 3, 0};
 
     Model *square = new Model(&modelC[0], &indices[0], COUNT_OF(modelC), COUNT_OF(indices));
-    Entity *FPSCube = new Entity(square, backTexture);
+    Entity *FPSCube = new Entity(square, backTexture, ldLocation);
     FPSCube->position = glm::vec3(0,0,0);
     FPSCube->scale = 1.0f;
-
-    GLint modelLocation  = glGetUniformLocation(shaderProgram.getProgramID(), "model" );
-    GLint modelOrthoLocation  = glGetUniformLocation(orthoShader.getProgramID(), "model" );
-    camera->InitUniforms(shaderProgram.getProgramID());
-    GLint ldLocation = glGetUniformLocation(shaderProgram.getProgramID(), "lightingDisable");
-
-    GLint sizeLocation = glGetUniformLocation(orthoShader.getProgramID(), "screenSize" );
-    orthoShader.bind();
-    glUniform2f(sizeLocation, res_x, res_y);
+    FPSCube->disableLighting = true;
 
     camera->UploadUniforms(shaderProgram.getProgramID());
     glUniform1i(ldLocation, 0);
@@ -119,7 +124,6 @@ int main(int argc, char** argv){
     }
     SDL_SetRelativeMouseMode(SDL_TRUE);
     while(running){
-
         while(SDL_PollEvent(&event)){
             switch(event.type){
                 case SDL_QUIT:
@@ -165,10 +169,10 @@ int main(int argc, char** argv){
         if(keystates[SDL_SCANCODE_D]){
             camera->Move(0, 0.1, 0);
         }
-        if(keystates[SDL_SCANCODE_Q]){
+        if(keystates[SDL_SCANCODE_LSHIFT]){
             camera->Move(0, 0, 0.05);
         }
-        if(keystates[SDL_SCANCODE_E]){
+        if(keystates[SDL_SCANCODE_SPACE]){
             camera->Move(0, 0, -.05);
         }
         #if 1
@@ -180,9 +184,7 @@ int main(int argc, char** argv){
         camera->UploadUniforms(shaderProgram.getProgramID());
         // render
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glUniform1i(ldLocation, 0);
         dragon->render(0, modelLocation);
-        glUniform1i(ldLocation, 1);
         cubeEnt->render(0, modelLocation);
         lightbox->render(0, modelLocation);
         #endif

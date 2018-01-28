@@ -13,7 +13,7 @@ Camera::Camera(glm::vec3 position, glm::vec3 lookAt, float aspect){
 void Camera::update(void){
     forwards = glm::vec3(sinf(phi) * cosf(theta), cosf(phi), sinf(phi) * sinf(theta));
     lookAt = forwards + position;
-    right = glm::cross(forwards, UP);
+    right = glm::normalize(glm::cross(forwards, UP));
     view = getViewMatrix();
 }
 
