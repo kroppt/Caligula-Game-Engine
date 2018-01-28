@@ -49,6 +49,9 @@ void Texture::init(SDL_Surface * surface, GLenum target, bool flip){
         for(int row = 0; row < surf->h; row++){
             memcpy(&dst[rowbytes * row], &src[(h - row - 1) * rowbytes], rowbytes);
         }
+        //#ifdef RANDOM_TEXTURES_NO_ONE_WILL_EVER_DEFINE_THIS
+        //getrandom(dst, n_ints * 4, 0);
+        //#endif
         IMG_SavePNG(surf, "debug.test.png");
         //SDL_UnlockSurface(surface);
         //SDL_UnlockSurface(surf);

@@ -10,6 +10,10 @@ class Camera{
 		glm::mat4 getViewMatrix();
 		glm::vec3 position;
 		glm::vec3 lookAt;
+
+		//
+		float yaw, pitch, roll;
+		
 };
 
 #endif

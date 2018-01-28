@@ -98,7 +98,7 @@ static void printProgramLog(GLuint program){
         glGetProgramiv(program, GL_INFO_LOG_LENGTH, &maxLength);
         
         //Allocate string
-        char* infoLog = (char*) malloc(sizeof(char) * maxLength);
+        char* infoLog = (char*) calloc(maxLength, sizeof(char));
         
         //Get info log
         glGetProgramInfoLog(program, maxLength, &infoLogLength, infoLog);
@@ -124,7 +124,7 @@ static void printShaderLog(GLuint shader){
         glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
         
         //Allocate string
-        char* infoLog = (char*) malloc(sizeof(char) * maxLength);
+        char* infoLog = (char*) calloc(maxLength, sizeof(char));
         
         //Get info log
         glGetShaderInfoLog(shader, maxLength, &infoLogLength, infoLog);

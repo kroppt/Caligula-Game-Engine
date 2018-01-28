@@ -5,7 +5,10 @@
 #include <glm/gtx/euler_angles.hpp>
 #include "model.hpp"
 
-Entity::Entity(Model *model, Texture *texture) : model_(model), texture_(texture) {scale = 1.0f;}
+Entity::Entity(Model *model, Texture *texture) : model_(model), texture_(texture) {
+    scale = 1.0f;
+    yaw = 0; pitch = 0; roll = 0;
+}
 
 /**
  * This constructor is merely for laziness, would not be used in practice as it
