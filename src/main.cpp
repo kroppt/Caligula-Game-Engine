@@ -45,7 +45,7 @@ int main(int argc, char** argv){
         printf("SDL_GL_CreateContext failed %s\n", SDL_GetError());
     }
     SDL_GL_MakeCurrent(win, context);
-    SDL_GL_SetSwapInterval(1);
+    SDL_GL_SetSwapInterval(0);
     if (!gladLoadGL()) {
         std::cout << "gladLoadGL error" << std::endl;
         SDL_Quit();
@@ -57,7 +57,7 @@ int main(int argc, char** argv){
     TextRender text_render = TextRender();
     text_render.ChangeFontSize(FONTSIZE_LARGE);
     text_render.ChangeFontRGBA(1., 0., 1., 1);
-    text_render.ChangeFontBackgroundRGBA(0., 1., 1., 1);
+    text_render.ChangeFontBackgroundRGBA(0., 0., .3, 1);
     Texture *textTexture = text_render.WriteText("This is a... texture test!");
 
     ShaderProgram shaderProgram("vertex_shader.zap", "fragment_shader.boom");
@@ -87,7 +87,7 @@ int main(int argc, char** argv){
     Texture *backTexture = new Texture("resources/graphWithSun.png"); //Screenshot from 2018-01-21 22-30-09.png");
     Entity *FPSCube = new Entity(square, backTexture);
     FPSCube->position = glm::vec3(0,0,0);
-    FPSCube->scale = 800.0f;
+    FPSCube->scale = 400.0f;
 
     glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)res_x / (float)res_y, 0.1f, 100.0f);
     glm::mat4 view = camera->getViewMatrix();
