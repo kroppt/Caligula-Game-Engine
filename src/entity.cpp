@@ -24,7 +24,7 @@ void Entity::render(float alpha, uint uniformLocation){
     // TODO implement positioning and rotation of entity
     if(uniformLocation != INV_UNIFORM){
         glm::mat4 translation_matrix, rotation_matrix, result_matrix, scale_matrix;
-        translation_matrix = glm::translate(translation_matrix, position);
+        translation_matrix = glm::translate(translation_matrix, position + alpha * velocity);
         rotation_matrix = glm::yawPitchRoll(yaw, pitch, roll);
         scale_matrix = glm::scale(scale_matrix, glm::vec3(scale, scale,scale));
         result_matrix = translation_matrix * rotation_matrix * scale_matrix;
