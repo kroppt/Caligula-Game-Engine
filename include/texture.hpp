@@ -13,12 +13,15 @@ class Texture{
         GLenum getFormat() { return format_; }
         void bind(GLenum target = GL_TEXTURE_2D);
         void unbind(GLenum target = GL_TEXTURE_2D);
+        ~Texture(void);
 
     private:
+        void init(SDL_Surface * surface, GLenum target, bool flip);
         GLuint texID_;
         int width_, height_;
         GLenum format_;
         void *pixels_;
+        SDL_Surface *surf;
 
 };
 
