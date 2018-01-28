@@ -5,6 +5,7 @@
 
 Texture::Texture(const char *filename, GLenum target) {
     SDL_Surface *s = IMG_Load(filename);
+    printf("Loading texture from %s\n", filename);
     this->init(s, target, true);
     SDL_FreeSurface(s);
 }
@@ -12,36 +13,48 @@ Texture::Texture(const char *filename, GLenum target) {
 Texture::Texture(SDL_Surface *surface, GLenum target) {
     this->init(surface, target, false);
 }
-
+static int overlap_p(void *a, void *b, size_t n){
+    char *x = (char*)a, *y = (char*) b;
+    return (x<=y && x+n>y) || (y<=x && y+n>x);
+}
 void Texture::init(SDL_Surface * surface, GLenum target, bool flip){
     width_ = surface->w;
     height_ = surface->h;
-    
-    this->surf = SDL_CreateRGBSurface(SDL_SWSURFACE | SDL_PREALLOC, width_, height_, 32, surface->format->Rmask,
+    bool deallocate = false;
+    if(surface->format->BytesPerPixel != 4){
+        surface = SDL_ConvertSurfaceFormat(surface, SDL_PIXELFORMAT_RGBA32, 0);
+        deallocate = true;
+    }
+    this->surf = SDL_CreateRGBSurface(0, width_, height_, 32, surface->format->Rmask,
                     surface->format->Gmask, surface->format->Bmask, surface->format->Amask);
+    if(!surf){
+        fputs("SDL_CreateRGBSurface failed\n", stderr);
+    }
 
     if(flip){
         SDL_LockSurface(surface);
-        SDL_LockSurface(surf);
+        //SDL_LockSurface(surf);
         uint8_t *dst = (uint8_t*)surf->pixels;
         uint8_t *src = (uint8_t*)surface->pixels;
-        const size_t n_ints = surface->w * surface->h;
-        // for(size_t idx = 0; idx < n_ints; idx++){
-        //     dst[n_ints - idx -1] = src[idx];
-        // }
+        if(!dst)abort();
+        if(!src)abort();
         const int h = surf->h;
         const size_t rowbytes = surf->pitch;
-        printf("Rowbytes %lu Width %lu BPP 32\n", rowbytes, surf->w);
+        printf("Rowbytes %lu Width %d Height %d BPP 32\n", rowbytes, surf->w, surf->h);
+        IMG_SavePNG(surface, "debuga.test.png");
+        if(overlap_p((void*)dst, (void*)src, rowbytes * h)){
+            fprintf(stderr, "[texture.cpp:35] Destination & Source overlap! %lu %lu \n", rowbytes * h, ((intptr_t)dst)-((intptr_t)src) );
+            abort();
+        }
         for(int row = 0; row < surf->h; row++){
             memcpy(&dst[rowbytes * row], &src[(h - row - 1) * rowbytes], rowbytes);
         }
-        #ifdef RANDOM_TEXTURES_NO_ONE_WILL_EVER_DEFINE_THIS
-        getrandom(dst, n_ints * 4, 0);
-        #endif
-        SDL_UnlockSurface(surface);
-        SDL_UnlockSurface(surf);
+        IMG_SavePNG(surf, "debug.test.png");
+        //SDL_UnlockSurface(surface);
+        //SDL_UnlockSurface(surf);
     }else{
         SDL_BlitSurface(surface, NULL, surf, NULL);
+        SDL_LockSurface(surf);
     }
     pixels_ = surf->pixels;
 
@@ -58,6 +71,7 @@ void Texture::init(SDL_Surface * surface, GLenum target, bool flip){
     glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glGenerateMipmap(target);
+    if(deallocate) SDL_FreeSurface(surface);
 }
 
 Texture::~Texture(){
