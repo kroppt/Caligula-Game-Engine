@@ -9,7 +9,7 @@
 #include "textrender.hpp"
 #include "nus/io.h"
 #include <vector>
-#include "vao.hpp"
+#include "model.hpp"
 #include <SDL_image.h>
 #include "texture.hpp"
 #include "entity.hpp"
@@ -23,8 +23,8 @@ void setup(void);
 int main(int argc, char** argv){
     init();
 
-    int res_x = 1800;
-    int res_y = 1000;
+    int res_x = 720;
+    int res_y = 480;
     SDL_Window *win = SDL_CreateWindow(
         "Test Window",
         SDL_WINDOWPOS_CENTERED,
@@ -70,10 +70,11 @@ int main(int argc, char** argv){
     shaderProgram.bind();
 
     Camera *camera = new Camera(glm::vec3(0.0f,0.0f,2.0f), glm::vec3(0.0f,0.0f,0.0f));
-    Entity *dragon = new Entity("resources/dragonFromObj.ply", "out.png");
+    Entity *dragon = new Entity("resources/torus.ply", "out.png");
+    dragon->position = glm::vec3(0.1f, -3.9f, 9.4f);
 
-    // VAO *cubeVAO = loadVAOfromPLY("resources/cube.ply");
-    // Entity *FPSCube = new Entity(cubeVAO, textTexture);
+    // Model *cubeModel = loadModelfromPLY("resources/cube.ply");
+    // Entity *FPSCube = new Entity(cubeModel, textTexture);
     // FPSCube->position = dragon->position;
     // FPSCube->position.x -= 0.04;
     // FPSCube->scale = 0.03;
@@ -107,13 +108,13 @@ int main(int argc, char** argv){
                         case SDLK_RIGHT: dragon->yaw -= 0.01f; break;
                         case SDLK_SLASH: dragon->roll += 0.01f; break;
                         case SDLK_PERIOD: dragon->roll -= 0.01f; break;
-                        case SDLK_UP: dragon->pitch += 0.01f; break;
-                        case SDLK_DOWN: dragon->pitch -= 0.01f; break;
+                        case SDLK_UP: dragon->pitch += 0.01f; playSnd("test", 10,10,10,1,1);break;
+                        case SDLK_DOWN: dragon->pitch -= 0.01f; playSnd("test", -10,-10,-10,1,1);break;
 			            case SDLK_l: std::cout << "dragon at (" << dragon->position.x << ", " << dragon->position.y << ", " << dragon->position.z << ")" << std::endl; break;
-                        case SDLK_w: dragon->position.x += 0.1f; break;
-                        case SDLK_s: dragon->position.x -= 0.1f; break;
-                        case SDLK_a: dragon->position.y += 0.1f; break;
-                        case SDLK_d: dragon->position.y -= 0.1f; break;
+                        case SDLK_w: dragon->position.x += 0.1f; playSnd("test", 1,10,1,1,1);break;
+                        case SDLK_s: dragon->position.x -= 0.1f; playSnd("test", 1,-10,1,1,1);break;
+                        case SDLK_a: dragon->position.y += 0.1f; playSnd("test", -10,1,1,1,1); break;
+                        case SDLK_d: dragon->position.y -= 0.1f; playSnd("test", 10,1,1,1,1); break;
                         case SDLK_q: dragon->position.z += 0.1f; break;
                         case SDLK_e: dragon->position.z -= 0.1f; break;
                         default: playSnd("test", 1,1,1,1,1); break;
@@ -121,6 +122,7 @@ int main(int argc, char** argv){
                     break;
             }
         }
+
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         dragon->render(0, modelLocation);
         // FPSCube->render(0, modelLocation);

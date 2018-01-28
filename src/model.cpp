@@ -1,5 +1,5 @@
 #include "random.hpp"
-#include "vao.hpp"
+#include "model.hpp"
 #include "glad/glad.h"
 #include <stdio.h>
 #include <iostream>
@@ -10,7 +10,7 @@
 #include <stdexcept>
 #include <vector>
 
-VAO::VAO(float *vertices, unsigned *indices, size_t nVertices, size_t nIndices) :
+Model::Model(float *vertices, unsigned *indices, size_t nVertices, size_t nIndices) :
  vertices_(vertices), indices_(indices), nVertices_(nVertices), nIndices_(nIndices) {
     // create vertex array object
     glGenVertexArrays(1, &vao_);
@@ -49,7 +49,7 @@ VAO::VAO(float *vertices, unsigned *indices, size_t nVertices, size_t nIndices) 
     glBindVertexArray(0);
 }
 
-void VAO::render(){
+void Model::render(){
     // setup vertex array object
     glBindVertexArray(vao_);
     glEnableVertexAttribArray(0);
@@ -69,7 +69,7 @@ void VAO::render(){
     glBindVertexArray(0);
 }
 
-VAO::~VAO(){
+Model::~Model(){
     glDeleteBuffers(1, &vbo_);
     glDeleteBuffers(1, &ibo_);
     glDeleteVertexArrays(1, &vao_);
@@ -81,7 +81,7 @@ VAO::~VAO(){
  * @param modelFilename char* representing filename of model
  * @return a pointer to a VAO loaded from the specified file
  **/
-VAO* loadVAOfromPLY(const char *modelFilename){
+Model* loadModelfromPLY(const char *modelFilename){
     std::ifstream in(modelFilename);
     if(!in){
         std::ostringstream oss;
@@ -146,5 +146,5 @@ VAO* loadVAOfromPLY(const char *modelFilename){
     #endif
     std::cout << "\"" << modelFilename << "\" loaded successfully!" << std::endl;
     
-    return new VAO(vertices.data(), indices.data(), vertices.size()/12, indices.size());
+    return new Model(vertices.data(), indices.data(), vertices.size()/12, indices.size());
 }

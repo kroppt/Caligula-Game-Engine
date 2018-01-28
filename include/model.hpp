@@ -1,12 +1,12 @@
-#ifndef VAO_H
-#define VAO_H
+#ifndef MODEL_H
+#define MODEL_H
 #include <stddef.h>
 #include "glad/glad.h"
 
-class VAO{
+class Model{
     public:
-        VAO(float *vertices, unsigned *indices, size_t nVertices, size_t nIndices);
-        ~VAO();
+        Model(float *vertices, unsigned *indices, size_t nVertices, size_t nIndices);
+        ~Model();
         void render(void);
     private:
         GLuint vao_, vbo_, ibo_;
@@ -16,6 +16,6 @@ class VAO{
 
 };
 
-VAO* loadVAOfromPLY(const char *modelFilename);
+Model* loadModelfromPLY(const char *modelFilename);
 
 #endif

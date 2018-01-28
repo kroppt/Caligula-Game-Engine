@@ -11,7 +11,7 @@
 #include "textrender.hpp"
 #include "nus/io.h"
 #include <vector>
-#include "vao.hpp"
+#include "model.hpp"
 #include <SDL_image.h>
 #include "texture.hpp"
 #include "entity.hpp"
@@ -20,7 +20,7 @@
 class Window{
     Window();
 
-}
+};
 
 
 #endif

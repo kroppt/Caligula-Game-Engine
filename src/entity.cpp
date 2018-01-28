@@ -3,9 +3,9 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/euler_angles.hpp>
-#include "vao.hpp"
+#include "model.hpp"
 
-Entity::Entity(VAO *vao, Texture *texture) : vao_(vao), texture_(texture) {scale = 1.0f;}
+Entity::Entity(Model *model, Texture *texture) : model_(model), texture_(texture) {scale = 1.0f;}
 
 /**
  * This constructor is merely for laziness, would not be used in practice as it
@@ -15,7 +15,7 @@ Entity::Entity(VAO *vao, Texture *texture) : vao_(vao), texture_(texture) {scale
 Entity::Entity(const char *modelFilename, const char *textureFilename){
     vao_ = loadVAOfromPLY(modelFilename);
     texture_ = new Texture(textureFilename);
-    position.x = 0.0f; position.y = -0.1f; position.z = -0.9f;
+    position = glm::vec3(0,0,0);
     yaw = 0; pitch = 0; roll = 0;
     scale = 1.0f;
 }
