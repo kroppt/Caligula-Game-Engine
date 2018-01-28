@@ -4,10 +4,12 @@
 #include <glm/gtx/euler_angles.hpp>
 #include <math.h>
 
-Camera::Camera(glm::vec3 position, glm::vec3 lookAt, float aspect){
+Camera::Camera(glm::vec3 position, float aspect){
     this->position = position;
-    this->lookAt = lookAt;
     this->projection = glm::perspective(glm::radians(45.0f), aspect, 0.1f, 100.0f);
+    phi = M_PI_2;
+    theta = M_PI;
+    this->update();
 }
 
 void Camera::update(void){
