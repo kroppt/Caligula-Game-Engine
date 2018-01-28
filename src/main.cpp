@@ -45,7 +45,7 @@ int main(int argc, char** argv){
         printf("SDL_GL_CreateContext failed %s\n", SDL_GetError());
     }
     SDL_GL_MakeCurrent(win, context);
-    SDL_GL_SetSwapInterval(1);
+    SDL_GL_SetSwapInterval(0);
     if (!gladLoadGL()) {
         std::cout << "gladLoadGL error" << std::endl;
         SDL_Quit();
@@ -57,7 +57,7 @@ int main(int argc, char** argv){
     TextRender text_render = TextRender();
     text_render.ChangeFontSize(FONTSIZE_LARGE);
     text_render.ChangeFontRGBA(1., 0., 1., 1);
-    text_render.ChangeFontBackgroundRGBA(0., 1., 1., 1);
+    text_render.ChangeFontBackgroundRGBA(0., 0., .3, 1);
     Texture *textTexture = text_render.WriteText("This is a... texture test!");
 
     ShaderProgram shaderProgram("vertex_shader.zap", "fragment_shader.boom");
