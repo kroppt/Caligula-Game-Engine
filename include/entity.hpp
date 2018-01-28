@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#define INV_UNIFORM 0xFFFFFFFF
 class Entity{
     public:
         Entity(VAO *vao, Texture *texture);

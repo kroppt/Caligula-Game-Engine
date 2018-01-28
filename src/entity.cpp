@@ -22,14 +22,14 @@ Entity::Entity(const char *modelFilename, const char *textureFilename){
 
 void Entity::render(float alpha, uint uniformLocation){
     // TODO implement positioning and rotation of entity
-    glm::mat4 translation_matrix, rotation_matrix, result_matrix, scale_matrix;
-
-    translation_matrix = glm::translate(translation_matrix, position);
-    rotation_matrix = glm::yawPitchRoll(yaw, pitch, roll);
-    scale_matrix = glm::scale(scale_matrix, glm::vec3(scale, scale,scale));
-    result_matrix = translation_matrix * rotation_matrix * scale_matrix;
-    glUniformMatrix4fv(uniformLocation, 1, false, &result_matrix[0][0]);
-
+    if(uniformLocation != INV_UNIFORM){
+        glm::mat4 translation_matrix, rotation_matrix, result_matrix, scale_matrix;
+        translation_matrix = glm::translate(translation_matrix, position);
+        rotation_matrix = glm::yawPitchRoll(yaw, pitch, roll);
+        scale_matrix = glm::scale(scale_matrix, glm::vec3(scale, scale,scale));
+        result_matrix = translation_matrix * rotation_matrix * scale_matrix;
+        glUniformMatrix4fv(uniformLocation, 1, false, &result_matrix[0][0]);
+    }
     texture_->bind();
     vao_->render();
     texture_->unbind();
