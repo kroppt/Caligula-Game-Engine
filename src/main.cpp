@@ -57,17 +57,8 @@ int main(int argc, char** argv){
     text_render.ChangeFontBackgroundRGBA(0., 1., 1., 1);
     Texture *textTexture = text_render.WriteText("This is a... texture test!");
 
-    const char *vertexShaderFilename = "vertex_shader.zap";
-    const char *fragmentShaderFilename = "fragment_shader.boom";
-    GLuint vertexShader = createShader(GL_VERTEX_SHADER, vertexShaderFilename);
-    GLuint fragmentShader = createShader(GL_FRAGMENT_SHADER, fragmentShaderFilename);
-    
-    std::vector<GLuint> shaderList;
-    shaderList.push_back(vertexShader);
-    shaderList.push_back(fragmentShader);
-
-    ShaderProgram shaderProgram(shaderList);
-    shaderProgram.bind();
+    ShaderProgram shaderProgram("vertex_shader.zap", "fragment_shader.boom");
+    ShaderProgram orthoShader("resources/ortho.vsh", "resources/ortho.fsh");
 
     Camera *camera = new Camera(glm::vec3(0.0f,0.0f,2.0f), glm::vec3(0.0f,0.0f,0.0f));
     Entity *dragon = new Entity("resources/dragonFromObj.ply", "out.png");

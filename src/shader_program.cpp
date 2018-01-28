@@ -28,6 +28,29 @@ ShaderProgram::ShaderProgram(std::vector<GLuint> shaderList){
     }
 }
 
+
+ShaderProgram::ShaderProgram(const char *vertexShaderFilename, const char *fragmentShaderFilename){
+    // initialize OpenGL program and shader IDs
+    programID_ = glCreateProgram();
+
+    GLuint vertexShader = createShader(GL_VERTEX_SHADER, vertexShaderFilename);
+    GLuint fragmentShader = createShader(GL_FRAGMENT_SHADER, fragmentShaderFilename);
+
+    glAttachShader(programID_, vertexShader);
+    glAttachShader(programID_, fragmentShader);
+
+    glLinkProgram(programID_);
+
+    // check for program errors
+    GLint programSuccess = GL_TRUE;
+    glGetProgramiv(programID_, GL_LINK_STATUS, &programSuccess);
+    if(programSuccess != GL_TRUE){
+        printProgramLog(programID_);
+        throw std::invalid_argument("Error linking program");
+    }
+}
+
+
 GLuint createShader(GLenum shaderType, const char *filename){
     GLuint shader = glCreateShader(shaderType);
     char *source = load_file(filename);
