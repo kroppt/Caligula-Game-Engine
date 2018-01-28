@@ -10,6 +10,7 @@ Entity::Entity(Model *model, Texture *texture) {
     texture_ = texture;
     scale = 1.0f;
     yaw = 0; pitch = 0; roll = 0;
+    disableLighting = false;
 }
 
 /**
@@ -23,6 +24,7 @@ Entity::Entity(const char *modelFilename, const char *textureFilename){
     position = glm::vec3(0,0,0);
     yaw = 0; pitch = 0; roll = 0;
     scale = 1.0f;
+    disableLighting = false;
 }
 
 void Entity::render(float alpha, uint uniformLocation){

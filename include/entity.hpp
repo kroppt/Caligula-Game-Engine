@@ -20,6 +20,7 @@ class Entity{
         glm::vec3 position, velocity;
         float yaw, pitch, roll, scale;
         Texture *texture_;
+        bool disableLighting;
     private:
         Model *model_;
 
