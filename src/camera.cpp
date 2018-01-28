@@ -3,11 +3,11 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/euler_angles.hpp>
 #include <math.h>
-
+#define ZFAR 1000.0f
 Camera::Camera(glm::vec3 position, glm::vec3 lookAt, float aspect){
     this->position = position;
     this->lookAt = lookAt;
-    this->projection = glm::perspective(glm::radians(45.0f), aspect, 0.1f, 100.0f);
+    this->projection = glm::perspective(glm::radians(45.0f), aspect, 0.1f, ZFAR);
 }
 
 void Camera::update(void){
