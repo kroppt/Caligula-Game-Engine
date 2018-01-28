@@ -4,7 +4,7 @@
 #include "entity.hpp"
 class World{
     public:
-        Entity* addEntity(Model *model, Texture *texture);
+        Entity* addEntity(Model *model, Texture *texture, GLint ldLocation);
         void render(float alpha, uint uniformLocation);
         void update(void);
     private:

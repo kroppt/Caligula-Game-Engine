@@ -1,8 +1,8 @@
 #include "world.hpp"
 #include "entity.hpp"
 
-Entity* World::addEntity(Model *model, Texture *texture){
-    Entity *entity = new Entity(model, texture);
+Entity* World::addEntity(Model *model, Texture *texture, GLint ldLocation){
+    Entity *entity = new Entity(model, texture, ldLocation);
     entities_.push_back(entity);
     return entity;
 }

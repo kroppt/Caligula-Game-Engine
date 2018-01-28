@@ -19,6 +19,7 @@
 #include "resource_manager.hpp"
 #include "fps_counter.hpp"
 #include "window.hpp"
+#include "world.hpp"
 
 #define COUNT_OF(x) (sizeof(x)/sizeof(x[0]))
 
@@ -73,19 +74,20 @@ int main(int argc, char** argv){
     Model *cubeModel = rm->loadModel("resources/cubeTexture.ply");
     Model *dragonModel = rm->loadModel("resources/dragonFromObj.ply");
 
+    World *world = new World();
 
     //make the dragon
-    Entity *dragon = new Entity(dragonModel, dragonTexture, ldLocation);
+    Entity *dragon = world->addEntity(dragonModel, dragonTexture, ldLocation);
     dragon->position = glm::vec3(0.0f, -4.2f, -6.8f);
     
     // make the lightbox
-    Entity *lightbox = new Entity(cubeM1, whiteTexture, ldLocation);
+    Entity *lightbox = world->addEntity(cubeM1, whiteTexture, ldLocation);
     lightbox->position = glm::vec3(3,3,3);
     lightbox->scale = 0.05f;
     lightbox->disableLighting = true;
     
     // make the background cube
-    Entity *cubeEnt = new Entity(cubeModel, backTexture, ldLocation);
+    Entity *cubeEnt = world->addEntity(cubeModel, backTexture, ldLocation);
     cubeEnt->disableLighting = true;
     cubeEnt->scale = 20.0;
 
@@ -162,9 +164,7 @@ int main(int argc, char** argv){
         camera->UploadUniforms(shaderProgram.getProgramID());
         // render
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        dragon->render(0, modelLocation);
-        cubeEnt->render(0, modelLocation);
-        lightbox->render(0, modelLocation);
+        world->render(0, modelLocation);
         // update fps
         counter->frame();
         ////////////////////////////////////// orthographic HUD rendering
