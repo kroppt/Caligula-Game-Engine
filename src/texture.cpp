@@ -22,7 +22,8 @@ void Texture::init(SDL_Surface * surface, GLenum target, bool flip){
     height_ = surface->h;
     bool deallocate = false;
     if(surface->format->BytesPerPixel != 4){
-        surface = SDL_ConvertSurfaceFormat(surface, SDL_PIXELFORMAT_RGBA32, 0);
+        SDL_Surface *tmp = surface;
+        surface = SDL_ConvertSurfaceFormat(tmp, SDL_PIXELFORMAT_RGBA32, 0);
         deallocate = true;
     }
     this->surf = SDL_CreateRGBSurface(0, width_, height_, 32, surface->format->Rmask,
@@ -56,7 +57,10 @@ void Texture::init(SDL_Surface * surface, GLenum target, bool flip){
         //SDL_UnlockSurface(surface);
         //SDL_UnlockSurface(surf);
     }else{
+        SDL_LockSurface(surface);
+        SDL_LockSurface(surf);
         SDL_BlitSurface(surface, NULL, surf, NULL);
+        IMG_SavePNG(surf, "debugc.test.png");
         SDL_LockSurface(surf);
     }
     pixels_ = surf->pixels;

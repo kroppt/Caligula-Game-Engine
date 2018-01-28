@@ -19,9 +19,9 @@ class Entity{
 
         glm::vec3 position, velocity;
         float yaw, pitch, roll, scale;
+        Texture *texture_;
     private:
         Model *model_;
-        Texture *texture_;
 
 };
 

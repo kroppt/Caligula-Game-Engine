@@ -137,7 +137,7 @@ Texture *TextRender::WriteText(const char *text) {
     cairo_show_glyphs(cr, cairo_glyphs, glyph_count);
     cairo_glyph_free(cairo_glyphs);
     cairo_destroy(cr);
-    cairo_surface_destroy(cairo_surface);
+    //cairo_surface_destroy(cairo_surface);
     hb_buffer_destroy(hb_buffer);
     Texture *tex = new Texture(sdl_surface);
     SDL_FreeSurface(sdl_surface);

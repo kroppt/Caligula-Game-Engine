@@ -53,11 +53,12 @@ int main(int argc, char** argv){
     }
 
     setup();
-    /*TextRender text_render = TextRender();
+    
+    TextRender text_render = TextRender();
     text_render.ChangeFontSize(FONTSIZE_LARGE);
     text_render.ChangeFontRGBA(1., 0., 1., 1);
     text_render.ChangeFontBackgroundRGBA(0., 1., 1., 1);
-    Texture *textTexture = text_render.WriteText("This is a... texture test!");*/
+    Texture *textTexture = text_render.WriteText("This is a... texture test!");
 
     ShaderProgram shaderProgram("vertex_shader.zap", "fragment_shader.boom");
     ShaderProgram orthoShader("resources/ortho.vsh", "resources/ortho.fsh");
@@ -112,6 +113,9 @@ int main(int argc, char** argv){
     SDL_Event event;
     bool running = true;
     loadSound("test", "audio/sh.mpcm");
+    uint fps_counter = 0, fps = 0;
+    uint now = time(NULL);
+    Texture *fps_texture = text_render.WriteText("FPS: PLACEHOLDER");
     while(running){
         while(SDL_PollEvent(&event)){
             switch(event.type){
@@ -169,9 +173,19 @@ int main(int argc, char** argv){
         glUniform2f(sizeLocation, res_x, res_y);
         FPSCube->render(0, modelOrthoLocation);
         glEnable(GL_DEPTH_TEST);
+        fps_counter++;
+        if(time(NULL) - now > 0){
+            fps = fps_counter;
+            fps_counter = 0;
+            delete fps_texture;
+            printf("FPS %d\n", fps);
+            fps_texture = text_render.WriteText((std::string("FPS: ") + std::to_string(fps)).c_str());
+            FPSCube->texture_ = fps_texture;
+            now = time(NULL);
+        }
         // update the window
         SDL_GL_SwapWindow(win);
-        SDL_Delay(10);
+        SDL_Delay(1);
     }
 
     shaderProgram.unbind();
