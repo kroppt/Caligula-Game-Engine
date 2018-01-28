@@ -67,7 +67,7 @@ int main(int argc, char** argv){
 
 
     Entity *dragon = new Entity("resources/dragonFromObj.ply", "out.png");
-    dragon->position = glm::vec3(0.0f, -4.2f, -12.8f);
+    dragon->position = glm::vec3(0.0f, -4.2f, -6.8f);
     Entity *lightbox = new Entity("resources/cube.ply", "resources/white_square.png");
     lightbox->position = glm::vec3(3,3,3);
     lightbox->scale = 0.05f;
@@ -76,9 +76,9 @@ int main(int argc, char** argv){
     float modelC[] = {
         //12-D vertices (x,y,z,r,g,b,a,s,t,nx,ny,nz)
         0,0,0 , 1,1,1,1 , 0,0 , 0, 0, 0,
-        0,1,0 , 1,1,1,1 , 0,1 , 0, 0, 0,
-        1,1,0 , 1,1,1,1 , 1,1 , 0, 0, 0,
-        1,0,0 , 1,1,1,1 , 1,0 , 0, 0, 0,
+        0,72,0 , 1,1,1,1 , 0,1 , 0, 0, 0,
+        338,72,0 , 1,1,1,1 , 1,1 , 0, 0, 0,
+        338,0,0 , 1,1,1,1 , 1,0 , 0, 0, 0,
     };
 
     uint indices[] = { 0, 1, 2, 2, 3, 0};
@@ -87,7 +87,7 @@ int main(int argc, char** argv){
     Texture *backTexture = new Texture("resources/graphWithSun.png"); //Screenshot from 2018-01-21 22-30-09.png");
     Entity *FPSCube = new Entity(square, backTexture);
     FPSCube->position = glm::vec3(0,0,0);
-    FPSCube->scale = 800.0f;
+    FPSCube->scale = 1.0f;
 
     glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)res_x / (float)res_y, 0.1f, 100.0f);
     glm::mat4 view = camera->getViewMatrix();
