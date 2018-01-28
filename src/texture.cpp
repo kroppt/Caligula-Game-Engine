@@ -11,7 +11,7 @@ Texture::Texture(const char *filename, GLenum target) {
 }
 
 Texture::Texture(SDL_Surface *surface, GLenum target) {
-    this->init(surface, target, false);
+    this->init(surface, target, true);
 }
 static int overlap_p(void *a, void *b, size_t n){
     char *x = (char*)a, *y = (char*) b;
@@ -24,6 +24,7 @@ void Texture::init(SDL_Surface * surface, GLenum target, bool flip){
     if(surface->format->BytesPerPixel != 4){
         SDL_Surface *tmp = surface;
         surface = SDL_ConvertSurfaceFormat(tmp, SDL_PIXELFORMAT_RGBA32, 0);
+        printf("Converting surface to RGBA\n");
         deallocate = true;
     }
     this->surf = SDL_CreateRGBSurface(0, width_, height_, 32, surface->format->Rmask,
@@ -50,29 +51,26 @@ void Texture::init(SDL_Surface * surface, GLenum target, bool flip){
         for(int row = 0; row < surf->h; row++){
             memcpy(&dst[rowbytes * row], &src[(h - row - 1) * rowbytes], rowbytes);
         }
-        //#ifdef RANDOM_TEXTURES_NO_ONE_WILL_EVER_DEFINE_THIS
-        //getrandom(dst, n_ints * 4, 0);
-        //#endif
         IMG_SavePNG(surf, "debug.test.png");
         //SDL_UnlockSurface(surface);
         //SDL_UnlockSurface(surf);
     }else{
         SDL_LockSurface(surface);
         SDL_LockSurface(surf);
-        SDL_BlitSurface(surface, NULL, surf, NULL);
-        IMG_SavePNG(surf, "debugc.test.png");
-        SDL_LockSurface(surf);
+        IMG_SavePNG(surface, "debugb.test.png");
+        uint8_t *dst = (uint8_t*)surf->pixels;
+        uint8_t *src = (uint8_t*)surface->pixels;
+        const size_t rowbytes = surf->pitch;
+        memcpy(dst, src, rowbytes * surf->h);
+        //IMG_SavePNG(surf, "debugc.test.png");
+        printf("Noflip\n");
+        SDL_UnlockSurface(surf);
     }
     pixels_ = surf->pixels;
 
     glGenTextures(1, &texID_);
     glBindTexture(target, texID_);
-
-    if (surface->format->BytesPerPixel == 4) {
-        format_ = GL_RGBA;
-    } else {
-        format_ = GL_RGB;
-    }
+    format_ =GL_RGBA;
     //
     glTexImage2D(target, 0, format_, width_, height_, 0, format_, GL_UNSIGNED_BYTE, surf->pixels);
     glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR);

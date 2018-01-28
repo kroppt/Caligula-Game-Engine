@@ -168,11 +168,6 @@ int main(int argc, char** argv){
         lightbox->render(0, modelLocation);
         #endif
         ////////////////////////////////////// orthographic HUD rendering
-        glDisable(GL_DEPTH_TEST);
-        orthoShader.bind();
-        glUniform2f(sizeLocation, res_x, res_y);
-        FPSCube->render(0, modelOrthoLocation);
-        glEnable(GL_DEPTH_TEST);
         fps_counter++;
         if(time(NULL) - now > 0){
             fps = fps_counter;
@@ -183,9 +178,14 @@ int main(int argc, char** argv){
             FPSCube->texture_ = fps_texture;
             now = time(NULL);
         }
+        glDisable(GL_DEPTH_TEST);
+        orthoShader.bind();
+        glUniform2f(sizeLocation, res_x, res_y);
+        FPSCube->render(0, modelOrthoLocation);
+        glEnable(GL_DEPTH_TEST);
         // update the window
         SDL_GL_SwapWindow(win);
-        SDL_Delay(1);
+        SDL_Delay(5);
     }
 
     shaderProgram.unbind();

@@ -5,7 +5,9 @@
 #include <glm/gtx/euler_angles.hpp>
 #include "model.hpp"
 
-Entity::Entity(Model *model, Texture *texture) : model_(model), texture_(texture) {
+Entity::Entity(Model *model, Texture *texture) {
+    model_ = model;
+    texture_ = texture;
     scale = 1.0f;
     yaw = 0; pitch = 0; roll = 0;
 }
