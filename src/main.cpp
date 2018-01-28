@@ -170,10 +170,10 @@ int main(int argc, char** argv){
             camera->Move(0, 0.1, 0);
         }
         if(keystates[SDL_SCANCODE_LSHIFT]){
-            camera->Move(0, 0, 0.05);
+            camera->Move(0, 0, -0.05);
         }
         if(keystates[SDL_SCANCODE_SPACE]){
-            camera->Move(0, 0, -.05);
+            camera->Move(0, 0, 0.05);
         }
         #if 1
         ///////////////////////////3d rendering
@@ -194,7 +194,7 @@ int main(int argc, char** argv){
             fps = fps_counter;
             fps_counter = 0;
             delete fps_texture;
-            printf("FPS %d\n", fps);
+            //printf("FPS %d\n", fps);
             fps_texture = text_render.WriteText((std::string("FPS: ") + std::to_string(fps)).c_str());
             FPSCube->texture_ = fps_texture;
             now = time(NULL);
@@ -206,7 +206,7 @@ int main(int argc, char** argv){
         glEnable(GL_DEPTH_TEST);
         // update the window
         SDL_GL_SwapWindow(win);
-        SDL_Delay(5);
+        //SDL_Delay(0);
     }
 
     shaderProgram.unbind();

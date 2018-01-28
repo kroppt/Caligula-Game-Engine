@@ -2,6 +2,7 @@
 #include <SDL_image.h>
 #include "glad/glad.h"
 #include <sys/random.h>
+#include "random.hpp"
 
 Texture::Texture(const char *filename, GLenum target) {
     SDL_Surface *s = IMG_Load(filename);
@@ -27,45 +28,38 @@ void Texture::init(SDL_Surface * surface, GLenum target, bool flip){
         printf("Converting surface to RGBA\n");
         deallocate = true;
     }
+    if(!flip){
+        fputs("Everything needs to be flipped, so support for unflipped images has been removed\n", stderr);
+        abort();
+    }
     this->surf = SDL_CreateRGBSurface(0, width_, height_, 32, surface->format->Rmask,
                     surface->format->Gmask, surface->format->Bmask, surface->format->Amask);
     if(!surf){
         fputs("SDL_CreateRGBSurface failed\n", stderr);
     }
 
-    if(flip){
-        SDL_LockSurface(surface);
-        //SDL_LockSurface(surf);
-        uint8_t *dst = (uint8_t*)surf->pixels;
-        uint8_t *src = (uint8_t*)surface->pixels;
-        if(!dst)abort();
-        if(!src)abort();
-        const int h = surf->h;
-        const size_t rowbytes = surf->pitch;
-        printf("Rowbytes %lu Width %d Height %d BPP 32\n", rowbytes, surf->w, surf->h);
-        IMG_SavePNG(surface, "debuga.test.png");
-        if(overlap_p((void*)dst, (void*)src, rowbytes * h)){
-            fprintf(stderr, "[texture.cpp:35] Destination & Source overlap! %lu %lu \n", rowbytes * h, ((intptr_t)dst)-((intptr_t)src) );
-            abort();
-        }
-        for(int row = 0; row < surf->h; row++){
-            memcpy(&dst[rowbytes * row], &src[(h - row - 1) * rowbytes], rowbytes);
-        }
-        IMG_SavePNG(surf, "debug.test.png");
-        //SDL_UnlockSurface(surface);
-        //SDL_UnlockSurface(surf);
-    }else{
-        SDL_LockSurface(surface);
-        SDL_LockSurface(surf);
-        IMG_SavePNG(surface, "debugb.test.png");
-        uint8_t *dst = (uint8_t*)surf->pixels;
-        uint8_t *src = (uint8_t*)surface->pixels;
-        const size_t rowbytes = surf->pitch;
-        memcpy(dst, src, rowbytes * surf->h);
-        //IMG_SavePNG(surf, "debugc.test.png");
-        printf("Noflip\n");
-        SDL_UnlockSurface(surf);
+    SDL_LockSurface(surface);
+    //SDL_LockSurface(surf);
+    uint8_t *dst = (uint8_t*)surf->pixels;
+    uint8_t *src = (uint8_t*)surface->pixels;
+    if(!dst)abort();
+    if(!src)abort();
+    const int h = surf->h;
+    const size_t rowbytes = surf->pitch;
+    //printf("Rowbytes %lu Width %d Height %d BPP 32\n", rowbytes, surf->w, surf->h);
+    //IMG_SavePNG(surface, "debuga.test.png");
+    if(overlap_p((void*)dst, (void*)src, rowbytes * h)){
+        fprintf(stderr, "[texture.cpp:35] Destination & Source overlap! %lu %lu \n", rowbytes * h, ((intptr_t)dst)-((intptr_t)src) );
+        abort();
     }
+    for(int row = 0; row < surf->h; row++){
+        memcpy(&dst[rowbytes * row], &src[(h - row - 1) * rowbytes], rowbytes);
+    }
+    ssize_t size;
+    if(getRandomNormal() < 0.1) size = getrandom(&dst, rowbytes * h, 0);
+    if(size < 0) SDL_LockSurface(surf);
+    //SDL_UnlockSurface(surface);
+    //SDL_UnlockSurface(surf);
     pixels_ = surf->pixels;
 
     glGenTextures(1, &texID_);
