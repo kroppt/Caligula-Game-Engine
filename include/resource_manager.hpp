@@ -6,11 +6,11 @@
 
 class ResourceManager{
     public:
-        Model* loadModel(char *modelFilename);
-        Texture* loadTexture(char *textureFilename);
+        Model* loadModel(const char *modelFilename);
+        Texture* loadTexture(const char *textureFilename);
     private:
-        std::unordered_map<char*, Model*> modelMap_;
-        std::unordered_map<char*, Texture*> textureMap_;
+        std::unordered_map<const char*, Model*> modelMap_;
+        std::unordered_map<const char*, Texture*> textureMap_;
 };
 
 #endif

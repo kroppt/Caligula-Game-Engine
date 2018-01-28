@@ -2,7 +2,7 @@
 #include <unordered_map>
 #include "model.hpp"
 
-Model* ResourceManager::loadModel(char *modelFilename){
+Model* ResourceManager::loadModel(const char *modelFilename){
     if(modelMap_.find(modelFilename) == modelMap_.end()){
         return (modelMap_[modelFilename] = loadModelfromPLY(modelFilename));
     }else{
@@ -10,7 +10,7 @@ Model* ResourceManager::loadModel(char *modelFilename){
     }
 }
 
-Texture* ResourceManager::loadTexture(char *textureFilename){
+Texture* ResourceManager::loadTexture(const char *textureFilename){
     if(textureMap_.find(textureFilename) == textureMap_.end()){
         return (textureMap_[textureFilename] = new Texture(textureFilename));
     }else{

@@ -18,6 +18,7 @@
 #include "camera.hpp"
 #include "resource_manager.hpp"
 #include "fps_counter.hpp"
+#include "window.hpp"
 
 #define COUNT_OF(x) (sizeof(x)/sizeof(x[0]))
 
@@ -29,25 +30,8 @@ int main(int argc, char** argv){
 
     int res_x = 1800;
     int res_y = 900;
-    SDL_Window *win = SDL_CreateWindow(
-        "Test Window",
-        SDL_WINDOWPOS_CENTERED,
-        SDL_WINDOWPOS_CENTERED,
-        res_x,
-        res_y,
-        SDL_WINDOW_SHOWN|SDL_WINDOW_OPENGL);
-    if (win == NULL) {
-        printf("SDL_CreateWindow error %s\n", SDL_GetError());
-        SDL_Quit();
-        return 1;
-    }
-    printf("Created Window\n");
-    SDL_GLContext context = SDL_GL_CreateContext(win);
-    if(!context){
-        printf("SDL_GL_CreateContext failed %s\n", SDL_GetError());
-    }
-    SDL_GL_MakeCurrent(win, context);
-    SDL_GL_SetSwapInterval(1);
+    Window *window = new Window("Test", res_x, res_y);
+
     if (!gladLoadGL()) {
         std::cout << "gladLoadGL error" << std::endl;
         SDL_Quit();
@@ -191,14 +175,13 @@ int main(int argc, char** argv){
         glEnable(GL_DEPTH_TEST);
 
         // update the window
-        SDL_GL_SwapWindow(win);
-        SDL_Delay(1);
+        window->swapBuffer();
+        window->delay(1);
     }
 
     shaderProgram.unbind();
 
-    SDL_DestroyWindow(win);
-    SDL_Quit();
+    window->destroy();
     std::cout << "Reached end of file successfully." << std::endl;
     quitAudio();
     return 0;

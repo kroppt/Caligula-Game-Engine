@@ -18,7 +18,17 @@
 
 
 class Window{
-    Window();
+    public:
+        Window(const char *name, int width, int height);
+        float getAspectRatio() { return (float) width_ / (float) height_; }
+        SDL_Window* getWindow() { return window_; }
+        void destroy(void);
+        void swapBuffer(void);
+        void delay(int);
+    private:
+        SDL_Window *window_;
+        SDL_GLContext context_;
+        int width_, height_;
 
 };
 
