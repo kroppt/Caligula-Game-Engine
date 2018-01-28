@@ -11,6 +11,7 @@ in vec3 LightDirection_cameraspace;
 out vec4 frag_color;
 
 uniform sampler2D frag_tex;
+uniform bool lightingDisable;
 
 void main(){
     // http://www.opengl-tutorial.org/beginners-tutorials/tutorial-8-basic-shading/ 
@@ -54,6 +55,8 @@ void main(){
 		// Diffuse : "color" of the object
 		MaterialDiffuseColor * LightColor * LightPower * cosTheta / (distance*distance) +
 		// Specular : reflective highlight, like a mirror
-		MaterialSpecularColor * LightColor * LightPower * pow(cosAlpha,5) / (distance*distance);
-
+		MaterialSpecularColor * LightColor * LightPower * pow(cosAlpha,3) / (distance*distance);
+	if(lightingDisable){
+		frag_color = texture(frag_tex, tex_coord) * v_color;
+	}
 }
