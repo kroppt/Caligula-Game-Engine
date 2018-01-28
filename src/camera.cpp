@@ -29,15 +29,15 @@ void Camera::Move(float dForward, float dWright, float dUp){
 }
 
 void Camera::InitUniforms(GLuint shaderID){
-    GLint viewLocation  = glGetUniformLocation(shaderID, "view" );
-    GLint projectionLocation  = glGetUniformLocation(shaderID, "projection" );
-    GLint vpLocation = glGetUniformLocation(shaderID, "vp");
+    viewLocation  = glGetUniformLocation(shaderID, "view" );
+    projectionLocation  = glGetUniformLocation(shaderID, "projection" );
+    vpLocation = glGetUniformLocation(shaderID, "vp");
 }
 
 void Camera::UploadUniforms(GLuint shaderID){
     glUseProgram(shaderID);
     glm::mat4 pv = projection * view;
-    glUniformMatrix4fv(vpLocation, 1, false, &vp[0][0]);
+    glUniformMatrix4fv(vpLocation, 1, false, &pv[0][0]);
     glUniformMatrix4fv(viewLocation, 1, false, &view[0][0]);
     glUniformMatrix4fv(projectionLocation, 1, false, &projection[0][0]);
 }
