@@ -55,9 +55,6 @@ void Texture::init(SDL_Surface * surface, GLenum target, bool flip){
     for(int row = 0; row < surf->h; row++){
         memcpy(&dst[rowbytes * row], &src[(h - row - 1) * rowbytes], rowbytes);
     }
-    ssize_t size;
-    if(getRandomNormal() < 0.1) size = getrandom(&dst, rowbytes * h, 0);
-    if(size < 0) SDL_LockSurface(surf);
     //SDL_UnlockSurface(surface);
     //SDL_UnlockSurface(surf);
     pixels_ = surf->pixels;
