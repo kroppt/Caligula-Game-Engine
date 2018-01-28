@@ -21,7 +21,6 @@ Entity::Entity(const char *modelFilename, const char *textureFilename){
 }
 
 void Entity::render(float alpha, uint uniformLocation){
-    // TODO implement positioning and rotation of entity
     if(uniformLocation != INV_UNIFORM){
         glm::mat4 translation_matrix, rotation_matrix, result_matrix, scale_matrix;
         translation_matrix = glm::translate(translation_matrix, position);
