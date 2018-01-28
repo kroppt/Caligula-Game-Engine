@@ -16,6 +16,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include "camera.hpp"
+#include "resource_manager.hpp"
 
 #define COUNT_OF(x) (sizeof(x)/sizeof(x[0]))
 
@@ -63,8 +64,12 @@ int main(int argc, char** argv){
     ShaderProgram shaderProgram("vertex_shader.zap", "fragment_shader.boom");
     ShaderProgram orthoShader("resources/ortho.vsh", "resources/ortho.fsh");
 
-    Camera *camera = new Camera(glm::vec3(0.0f,0.0f,20.0f), glm::vec3(0.0f,0.0f,0.0f));
+    Camera *camera = new Camera(glm::vec3(0.0f,0.0f,19.0f), glm::vec3(0.0f,0.0f,0.0f), (float)res_x / (float)res_y);
+    camera->theta = M_PI;
 
+    ResourceManager *rm = new ResourceManager();
+
+    Texture *backTexture = rm->loadTexture("resources/bad_texture.png");
 
     Entity *dragon = new Entity("resources/dragonFromObj.ply", "out.png");
     dragon->position = glm::vec3(0.0f, -4.2f, -6.8f);
@@ -72,7 +77,10 @@ int main(int argc, char** argv){
     lightbox->position = glm::vec3(3,3,3);
     lightbox->scale = 0.05f;
 
+
     Model *cubeModel = loadModelfromPLY("resources/cubeTexture.ply");
+    Entity *cubeEnt = new Entity(cubeModel, backTexture);
+    cubeEnt->scale = 20.0;
     float modelC[] = {
         //12-D vertices (x,y,z,r,g,b,a,s,t,nx,ny,nz)
         0,0,0 , 1,1,1,1 , 0,0 , 0, 0, 0,
@@ -84,30 +92,20 @@ int main(int argc, char** argv){
     uint indices[] = { 0, 1, 2, 2, 3, 0};
 
     Model *square = new Model(&modelC[0], &indices[0], COUNT_OF(modelC), COUNT_OF(indices));
-    Texture *backTexture = new Texture("resources/graphWithSun.png"); //Screenshot from 2018-01-21 22-30-09.png");
     Entity *FPSCube = new Entity(square, backTexture);
     FPSCube->position = glm::vec3(0,0,0);
     FPSCube->scale = 1.0f;
 
-    glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)res_x / (float)res_y, 0.1f, 100.0f);
-    glm::mat4 view = camera->getViewMatrix();
-    glm::mat4 vp = projection * view;
-
     GLint modelLocation  = glGetUniformLocation(shaderProgram.getProgramID(), "model" );
     GLint modelOrthoLocation  = glGetUniformLocation(orthoShader.getProgramID(), "model" );
-    GLint viewLocation  = glGetUniformLocation(shaderProgram.getProgramID(), "view" );
-    GLint projectionLocation  = glGetUniformLocation(shaderProgram.getProgramID(), "projection" );
-    GLint vpLocation = glGetUniformLocation(shaderProgram.getProgramID(), "vp");
+    camera->InitUniforms(shaderProgram.getProgramID());
     GLint ldLocation = glGetUniformLocation(shaderProgram.getProgramID(), "lightingDisable");
 
     GLint sizeLocation = glGetUniformLocation(orthoShader.getProgramID(), "screenSize" );
     orthoShader.bind();
     glUniform2f(sizeLocation, res_x, res_y);
 
-    shaderProgram.bind();
-    glUniformMatrix4fv(vpLocation, 1, false, &vp[0][0]);
-    glUniformMatrix4fv(viewLocation, 1, false, &view[0][0]);
-    glUniformMatrix4fv(projectionLocation, 1, false, &projection[0][0]);
+    camera->UploadUniforms(shaderProgram.getProgramID());
     glUniform1i(ldLocation, 0);
 
     SDL_Event event;
@@ -116,7 +114,12 @@ int main(int argc, char** argv){
     uint fps_counter = 0, fps = 0;
     uint now = time(NULL);
     Texture *fps_texture = text_render.WriteText("FPS: PLACEHOLDER");
+    if(SDL_CaptureMouse(SDL_TRUE)){
+        printf("SDL ERROR %s\n", SDL_GetError());
+    }
+    SDL_SetRelativeMouseMode(SDL_TRUE);
     while(running){
+
         while(SDL_PollEvent(&event)){
             switch(event.type){
                 case SDL_QUIT:
@@ -132,39 +135,55 @@ int main(int argc, char** argv){
                         case SDLK_UP: dragon->pitch += 0.01f; break;
                         case SDLK_DOWN: dragon->pitch -= 0.01f; break;
 			            case SDLK_p: std::cout << "dragon at (" << dragon->position.x << ", " << dragon->position.y << ", " << dragon->position.z << ")" << std::endl; break;
-                        case SDLK_w: dragon->position.y += 0.1f; break;
-                        case SDLK_s: dragon->position.y -= 0.1f; break;
-                        case SDLK_d: dragon->position.x += 0.1f; break;
-                        case SDLK_a: dragon->position.x -= 0.1f; break;
-                        case SDLK_q: dragon->position.z += 0.1f; break;
-                        case SDLK_e: dragon->position.z -= 0.1f; break;
-                        #ifndef NO_CAMERA_MOVE
-                        case SDLK_u: camera->position.y += 0.1f; break;
-                        case SDLK_o: camera->position.y -= 0.1f; break;
-                        case SDLK_j: camera->position.x += 0.1f; break;
-                        case SDLK_l: camera->position.x -= 0.1f; break;
-                        case SDLK_i: camera->position.z += 0.1f; break;
-                        case SDLK_k: camera->position.z -= 0.1f; break;
-                        #endif
-                        default: playSnd("test", 1,1,1,1,1); break;
+                        case SDLK_i: dragon->position.y += 0.1f; break;
+                        case SDLK_k: dragon->position.y -= 0.1f; break;
+                        case SDLK_l: dragon->position.x += 0.1f; break;
+                        case SDLK_j: dragon->position.x -= 0.1f; break;
+                        case SDLK_u: dragon->position.z += 0.1f; break;
+                        case SDLK_o: dragon->position.z -= 0.1f; break;
+                        case SDLK_n: SDL_SetWindowGrab(win, SDL_FALSE);break;
+                        case SDLK_c: SDL_SetWindowGrab(win, SDL_TRUE); break;
+                        case SDLK_y: playSnd("test", 1,1,1,1,1); break;
+                        default: break;
                     }
                     break;
+                case SDL_MOUSEMOTION:
+                    camera->UpdateLook(event.motion.xrel, event.motion.yrel);
+                    break;
             }
+        }
+        const uint8_t *keystates = SDL_GetKeyboardState(NULL);
+        if(keystates[SDL_SCANCODE_W]){
+            camera->Move(0.1, 0, 0);
+        }
+        if(keystates[SDL_SCANCODE_A]){
+            camera->Move(0, -.1, 0);
+        }
+        if(keystates[SDL_SCANCODE_S]){
+            camera->Move(-.1, 0, 0);
+        }
+        if(keystates[SDL_SCANCODE_D]){
+            camera->Move(0, 0.1, 0);
+        }
+        if(keystates[SDL_SCANCODE_Q]){
+            camera->Move(0, 0, 0.05);
+        }
+        if(keystates[SDL_SCANCODE_E]){
+            camera->Move(0, 0, -.05);
         }
         #if 1
         ///////////////////////////3d rendering
         // bind the shader
         shaderProgram.bind();
         // camera update
-        view = camera->getViewMatrix();
-        vp = projection * view;
-        glUniformMatrix4fv(vpLocation, 1, false, &vp[0][0]);
-        glUniformMatrix4fv(viewLocation, 1, false, &view[0][0]);
+        camera->update();
+        camera->UploadUniforms(shaderProgram.getProgramID());
         // render
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glUniform1i(ldLocation, 0);
         dragon->render(0, modelLocation);
         glUniform1i(ldLocation, 1);
+        cubeEnt->render(0, modelLocation);
         lightbox->render(0, modelLocation);
         #endif
         ////////////////////////////////////// orthographic HUD rendering
