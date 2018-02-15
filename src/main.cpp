@@ -20,6 +20,8 @@
 #include "fps_counter.hpp"
 #include "window.hpp"
 #include "world.hpp"
+#include "config.hpp"
+#include <libconfig.h++>
 
 #define COUNT_OF(x) (sizeof(x)/sizeof(x[0]))
 
@@ -29,9 +31,48 @@ void setup(void);
 int main(int argc, char** argv){
     init();
 
-    int res_x = 1800;
-    int res_y = 900;
+    std::cout << "Setting up config" << std::endl;
+    char *filename = "caligula.conf";
+    libconfig::Config cfg;
+    try{
+        readConfig(filename);
+    }
+    catch(const libconfig::FileIOException &fioex){
+        std::cout << "Config not found." << std::endl;
+        std::cout << "Creating new config file..." << std::endl;
+        try{
+            createConfig(filename);
+        }
+        catch(const libconfig::FileIOException &fioex){
+            std::cout << "Failed to create fresh config file: " << fioex.what() << std::endl;
+            std::cout << "Quitting..." << std::endl;
+            SDL_Quit();
+            return 1;
+        }
+        catch(const libconfig::ConfigException &cex){
+            std::cout << "Failed to create fresh config file: " << cex.what() << std::endl;
+            std::cout << "Quitting..." << std::endl;
+            SDL_Quit();
+            return 1;
+        }
+    }
+    catch(const libconfig::ParseException &pex){
+        std::cout << "Config failed to parse." << std::endl;
+        std::cout << "Quitting..." << std::endl;
+        SDL_Quit();
+        return 1;
+    }
+    catch(const libconfig::ConfigException &cex){
+        std::cout << "Config settings failed to parse: " << cex.what() << std::endl;
+        std::cout << "Quitting..." << std::endl;
+        SDL_Quit();
+        return 1;
+    }
+    std::cout << "Config successfully set." << std::endl;
+
     Window *window = new Window("Test", res_x, res_y);
+    // Set swap interval after creation of SDL Window
+    SDL_GL_SetSwapInterval(vsync);
 
     if (!gladLoadGL()) {
         std::cout << "gladLoadGL error" << std::endl;
