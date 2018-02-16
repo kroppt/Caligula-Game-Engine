@@ -88,7 +88,7 @@ int main(int argc, char** argv){
     text_render->ChangeFontBackgroundRGBA(0., 0., .3, 1);
     Texture *textTexture = text_render->WriteText("This is a... texture test!");
 
-    ShaderProgram shaderProgram("vertex_shader.zap", "fragment_shader.boom");
+    ShaderProgram shaderProgram("resources/vertex_shader.zap", "resources/fragment_shader.boom");
     ShaderProgram orthoShader("resources/ortho.vsh", "resources/ortho.fsh");
 
 
